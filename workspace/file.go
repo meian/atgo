@@ -25,3 +25,8 @@ func CookieFile() (string, time.Time, bool) {
 	}
 	return file, stat.ModTime(), true
 }
+
+func TaskInfoFile() (string, bool) {
+	file := filepath.Join(Dir(), "task-info.yaml")
+	return file, io.FileExists(file)
+}

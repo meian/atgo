@@ -23,9 +23,11 @@ func init() {
 	fm = tt.FuncMap{
 		"padding":    text.PadRight,
 		"date":       util.FormatTime,
+		"nullint":    util.NullIntString,
 		"mem":        util.FormatMemory,
 		"duration":   util.FormatDuration,
 		"contesturl": url.ContestURL,
+		"taskurl":    url.TaskURL,
 		"shortFunc": func(s string) string {
 			if len(s) == 0 {
 				return ""

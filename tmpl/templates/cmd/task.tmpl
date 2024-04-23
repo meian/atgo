@@ -1,0 +1,21 @@
+Contest :
+  URL          : {{ contesturl .Contest.ID }}
+  ID / Index   : {{ .Contest.ID }} - {{ .Index }}
+  Title        : {{ .Contest.Title }}
+Task :
+  URL          : {{ taskurl .Contest.ID .Task.ID }}
+  ID           : {{ .Task.ID }}
+  Title        : {{ .Task.Title }}
+  Score        : {{ nullint .Task.Score }}
+  Time limit   : {{ duration .Task.TimeLimit }}
+  Memory limit : {{ mem .Task.Memory }}
+{{ if (gt (len .Task.Samples) 0) }}
+{{ range .Task.Samples -}}
+================= Sample Input {{ .Index }} =================
+{{ .Input -}}
+----------------- Sample Output {{ .Index }} ----------------
+{{ .Output -}}
+
+{{ end -}}
+==================================================
+{{ end -}}

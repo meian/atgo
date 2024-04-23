@@ -13,6 +13,8 @@ type Task struct {
 	Memory    int           `gorm:"not null"`
 	Score     null.Int
 	Loaded    bool `gorm:"type:integer;not null"`
+
+	Samples []TaskSample `gorm:"foreignKey:TaskID;constraint:OnDelete:CASCADE"`
 }
 
 func init() {
