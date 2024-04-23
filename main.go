@@ -21,7 +21,9 @@ THE SOFTWARE.
 */
 package main
 
-import "github.com/meian/atgo/cmd"
+import (
+	"github.com/meian/atgo/cmd"
+)
 
 func main() {
 	cmd.Execute()

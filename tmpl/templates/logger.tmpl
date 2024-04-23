@@ -1,0 +1,2 @@
+{{- .Timestamp }} {{ .Level | printf "%-16s" }} {{ .Message -}}
+{{ if .FilePath }} [{{ .FilePath }}:{{ .FileLine }} - {{ .FuncName | shortFunc }}]{{ end -}}
