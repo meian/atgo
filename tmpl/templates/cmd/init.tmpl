@@ -1,0 +1,6 @@
+{{- if .AlreadInitialized -}}
+db is already initialized.
+{{- else -}}
+db is initialized.
+{{- end }}
+  file = {{ .DBFile }}

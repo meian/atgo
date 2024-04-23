@@ -9,6 +9,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/meian/atgo/config"
+	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/flags"
 	"github.com/meian/atgo/http"
 	"github.com/meian/atgo/http/cookiestore"
@@ -16,6 +17,7 @@ import (
 	"github.com/meian/atgo/io"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/url"
+	"github.com/meian/atgo/usecase"
 	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -39,6 +41,9 @@ var rootCmd = &cobra.Command{
 			return err
 		}
 		if err := initializeLogging(cmd); err != nil {
+			return err
+		}
+		if err := initializeDatabase(cmd); err != nil {
 			return err
 		}
 		if err := initializeHTTPClient(cmd); err != nil {
@@ -81,6 +86,23 @@ func initializeLogging(cmd *cobra.Command) error {
 	slog.SetDefault(logger)
 	logger.Debug("setup logger")
 	cmd.SetContext(logs.ContextWith(cmd.Context(), logger))
+	return nil
+}
+
+// initializeDatabase はデータベース接続の初期化を行う
+// DBがまだできていない場合は atgo init 相当の処理を事前に行うことで内部のデータを生成してから初期化を行う
+// 一部コマンドでは呼び出された際にDBファイルを生成されると困るものもあるため、それらのコマンドではDBの初期化が行われないようになっている
+// 具体的には database.Ignore() によって登録されたコマンドは初期化されず、対象コマンドの判別はコマンドのパスによって行っている
+func initializeDatabase(cmd *cobra.Command) error {
+	initFunc := func() error {
+		_, err := usecase.Init{}.Run(cmd.Context(), usecase.InitParam{})
+		return err
+	}
+	ctx, err := database.ContextWithNewDB(cmd.Context(), cmd.CommandPath(), initFunc)
+	if err != nil {
+		return err
+	}
+	cmd.SetContext(ctx)
 	return nil
 }
 

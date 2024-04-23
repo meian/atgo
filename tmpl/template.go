@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-//go:embed templates/*.tmpl
+//go:embed templates/*.tmpl templates/**/*.tmpl
 var files embed.FS
 
 var fm tt.FuncMap
@@ -35,6 +35,10 @@ func textTemplate(name string) *tt.Template {
 		panic(errors.Wrapf(err, "failed to read template: name=%s", name))
 	}
 	return tt.Must(templateWithFuncs(name, string(data)))
+}
+
+func CmdTemplate(name string) *tt.Template {
+	return textTemplate("cmd/" + name)
 }
 
 func LoggerTemplate() *tt.Template {
