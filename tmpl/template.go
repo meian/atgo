@@ -2,9 +2,15 @@ package tmpl
 
 import (
 	"embed"
+	"io"
+	"os"
+	"path/filepath"
 	"strings"
 	tt "text/template"
 
+	"github.com/meian/atgo/text"
+	"github.com/meian/atgo/url"
+	"github.com/meian/atgo/util"
 	"github.com/pkg/errors"
 )
 
@@ -15,6 +21,11 @@ var fm tt.FuncMap
 
 func init() {
 	fm = tt.FuncMap{
+		"padding":    text.PadRight,
+		"date":       util.FormatTime,
+		"mem":        util.FormatMemory,
+		"duration":   util.FormatDuration,
+		"contesturl": url.ContestURL,
 		"shortFunc": func(s string) string {
 			if len(s) == 0 {
 				return ""
@@ -43,6 +54,23 @@ func CmdTemplate(name string) *tt.Template {
 
 func LoggerTemplate() *tt.Template {
 	return textTemplate("logger")
+}
+
+func TaskTemplateBinary(name string) io.Reader {
+	data, err := files.Open("templates/task/" + TemplateName(name))
+	if err != nil {
+		panic(errors.Wrapf(err, "failed to read template: name=%s", name))
+	}
+	return data
+}
+
+func TaskTemplate(filename string) (*tt.Template, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	name := filepath.Base(strings.TrimSuffix(filename, filepath.Ext(filename)))
+	return templateWithFuncs(name, string(data))
 }
 
 func templateWithFuncs(name string, text string) (*tt.Template, error) {

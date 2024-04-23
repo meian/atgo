@@ -1,0 +1,8 @@
+{{ if eq (len .Contests) 0 -}}
+no contests found.
+you can load archived contest list by `{{ .LoadCommand }}`.
+{{ else -}}
+{{ range .Contests -}}
+    {{ .IDPadding }} - {{ .TitlePadding }} - {{ date .StartAt }} ~ {{ date .EndAt }}
+{{ end -}}
+{{ end -}}

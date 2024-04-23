@@ -15,6 +15,7 @@ import (
 
 type Crawler struct {
 	Path       string
+	pathParams map[string]string
 	client     *http.Client
 	loadCookie bool
 }
@@ -22,6 +23,7 @@ type Crawler struct {
 func NewCrawler(path string) *Crawler {
 	return &Crawler{
 		Path:       path,
+		pathParams: make(map[string]string),
 		loadCookie: true,
 	}
 }
@@ -39,11 +41,22 @@ func (c *Crawler) WithLoadCookie(loadCookie bool) *Crawler {
 }
 
 func (c *Crawler) clone() *Crawler {
+	ppm := make(map[string]string, len(c.pathParams))
+	for k, v := range c.pathParams {
+		ppm[k] = v
+	}
 	return &Crawler{
 		Path:       c.Path,
+		pathParams: ppm,
 		client:     c.client,
 		loadCookie: c.loadCookie,
 	}
+}
+
+func (c *Crawler) WithPathParam(key, value string) *Crawler {
+	c = c.clone()
+	c.pathParams[key] = value
+	return c
 }
 
 func (c Crawler) Get(ctx context.Context, queries url.Valuer) (*http.Response, error) {
@@ -73,7 +86,7 @@ func (c Crawler) DocumentPost(ctx context.Context, queries, bodies url.Valuer) (
 }
 
 func (c Crawler) crawl(ctx context.Context, method, contentType string, queries, bodies url.Valuer) (*http.Response, error) {
-	url := url.URL(c.Path, queries)
+	url := url.URL(c.Path, c.pathParams, queries)
 	logger := logs.FromContext(ctx).
 		With("url", url.String()).
 		With("method", method)

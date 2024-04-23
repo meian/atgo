@@ -1,0 +1,11 @@
+URL        : {{ contesturl .ID }}
+ID         : {{ .ID }}
+Rated type : {{ .RatedType }}
+Title      : {{ .Title }}
+Term       : {{ date .StartAt }} ~ {{ date .EndAt }}
+Target     : {{ .TargetRate }}
+
+Tasks :
+{{- range .Tasks }}
+  {{ .IndexPadding }} - {{ .ScorePadding }} - {{ .IDPadding }} - {{ .TitlePadding }} - Time: {{ printf "%6s" (duration .TimeLimit) }} / Memory: {{ printf "%7s" (mem .Memory) }}
+{{- end }}

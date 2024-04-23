@@ -2,23 +2,50 @@ package url
 
 import (
 	"net/url"
+	"strings"
 )
 
 const (
-	BaseURL   = "https://atcoder.jp"
-	HomePath  = "/home"
-	LoginPath = "/login"
+	BaseURL            = "https://atcoder.jp"
+	HomePath           = "/home"
+	LoginPath          = "/login"
+	ContestArchivePath = "/contests/archive"
+	ContestPath        = "/contests/{contestID}"
+	ContestTaskPath    = "/contests/{contestID}/tasks"
+	TaskPath           = "/contests/{contestID}/tasks/{id}"
 )
 
 func LoginURL() string {
-	return URL("/login", nil).String()
+	return URL("/login", nil, nil).String()
 }
 
 func HomeURL() string {
-	return URL(HomePath, nil).String()
+	return URL(HomePath, nil, nil).String()
 }
 
-func URL(path string, query Valuer) *url.URL {
+func ContestArchiveURL() string {
+	return URL(ContestArchivePath, nil, nil).String()
+}
+
+func ContestURL(contestID string) string {
+	pathParams := map[string]string{"contestID": contestID}
+	return URL(ContestPath, pathParams, nil).String()
+}
+
+func ContestTaskURL(contestID string) string {
+	pathParams := map[string]string{"contestID": contestID}
+	return URL(ContestTaskPath, pathParams, nil).String()
+}
+
+func TaskURL(contestID string, taskID string) string {
+	pathParams := map[string]string{"contestID": contestID, "id": taskID}
+	return URL(TaskPath, pathParams, nil).String()
+}
+
+func URL(path string, pathParams map[string]string, query Valuer) *url.URL {
+	for k, v := range pathParams {
+		path = strings.ReplaceAll(path, "{"+k+"}", v)
+	}
 	url, _ := url.Parse(BaseURL)
 	url = url.JoinPath(path)
 	if query != nil {

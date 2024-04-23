@@ -41,6 +41,10 @@ func (r *repository[T]) Update(ctx context.Context, model *T) error {
 	return r.DBConn.DB().Omit(clause.Associations).Save(model).Error
 }
 
+func (r *repository[T]) UpdateWithChilds(ctx context.Context, models *T) error {
+	return r.DBConn.DB().Save(models).Error
+}
+
 func (r *repository[T]) Delete(ctx context.Context, model *T) error {
 	return r.DBConn.DB().Omit(clause.Associations).Delete(model).Error
 }
@@ -48,4 +52,12 @@ func (r *repository[T]) Delete(ctx context.Context, model *T) error {
 func (r *repository[T]) TableName() string {
 	var m T
 	return database.TableName(r.DBConn.DB(), m)
+}
+
+func (r *repository[T]) Truncate(ctx context.Context) error {
+	return r.DBConn.DB().Exec("DELETE FROM " + r.TableName()).Error
+}
+
+func (r *repository[T]) Tx(f func(conn *database.DBConn) error) error {
+	return r.DBConn.Transaction(f)
 }

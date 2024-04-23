@@ -114,7 +114,7 @@ func initializeHTTPClient(cmd *cobra.Command) error {
 
 	if exists {
 		if time.Since(modtime) <= 24*time.Hour {
-			url := url.URL("", nil)
+			url := url.URL("", nil, nil)
 			if err := cookiestore.Load(url, cfile, jar); err != nil {
 				logger.Error(err.Error())
 				return errors.New("failed to load cookie")
@@ -142,7 +142,7 @@ func terminateHTTPClient(cmd *cobra.Command) {
 	}
 	cfile, _, _ := workspace.CookieFile()
 	logger = logger.With("cookie file", cfile)
-	if err := cookiestore.Save(url.URL("", nil), cfile, client.Jar); err != nil {
+	if err := cookiestore.Save(url.URL("", nil, nil), cfile, client.Jar); err != nil {
 		logger.With("error", err.Error()).Warn("failed to store cookies")
 		return
 	}
