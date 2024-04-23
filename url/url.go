@@ -13,6 +13,8 @@ const (
 	ContestPath        = "/contests/{contestID}"
 	ContestTaskPath    = "/contests/{contestID}/tasks"
 	TaskPath           = "/contests/{contestID}/tasks/{id}"
+	SubmitPath         = "/contests/{contestID}/submit"
+	MySubmissionPath   = "/contests/{contestID}/submissions/me"
 )
 
 func LoginURL() string {
@@ -40,6 +42,11 @@ func ContestTaskURL(contestID string) string {
 func TaskURL(contestID string, taskID string) string {
 	pathParams := map[string]string{"contestID": contestID, "id": taskID}
 	return URL(TaskPath, pathParams, nil).String()
+}
+
+func MySubmissionURL(contestID string) string {
+	pathParams := map[string]string{"contestID": contestID}
+	return URL(MySubmissionPath, pathParams, nil).String()
 }
 
 func URL(path string, pathParams map[string]string, query Valuer) *url.URL {
