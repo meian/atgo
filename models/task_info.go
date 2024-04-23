@@ -3,8 +3,12 @@ package models
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
+	"github.com/meian/atgo/files"
 	"github.com/meian/atgo/io"
+	"github.com/meian/atgo/url"
+	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
@@ -16,6 +20,69 @@ type taskYAML struct {
 type TaskInfo struct {
 	ContestID string `yaml:"contest-id"`
 	TaskID    string `yaml:"task-id"`
+}
+
+func (ti TaskInfo) TaskDir() string {
+	return filepath.Join(workspace.TaskRootDir(), ti.ContestID, ti.TaskID)
+}
+
+func (ti TaskInfo) TaskURL() string {
+	return url.TaskURL(ti.ContestID, ti.TaskID)
+}
+
+func (ti TaskInfo) RequiredStore() bool {
+	return ti.hasRequiredFiles(workspace.Dir())
+}
+
+func (ti TaskInfo) CanRestore() bool {
+	return ti.hasRequiredFiles(ti.TaskDir())
+}
+
+func (ti TaskInfo) hasRequiredFiles(dir string) bool {
+	return io.FileExists(files.TaskLocalFile(dir)) &&
+		io.FileExists(files.MainFile(dir)) &&
+		io.FileExists(files.TestFile(dir)) &&
+		io.FileExists(files.ModFile(dir)) &&
+		io.FileExists(files.SumFile(dir))
+}
+
+func (ti TaskInfo) StoreFiles() error {
+	wdir := workspace.Dir()
+	if err := ti.WriteFile(files.TaskLocalFile(wdir)); err != nil {
+		return errors.Wrap(err, "failed to write task file")
+	}
+	tdir := ti.TaskDir()
+	if err := os.MkdirAll(tdir, 0755); err != nil {
+		return errors.Wrap(err, "failed to create task directory")
+	}
+	return ti.syncFiles(wdir, tdir)
+}
+
+func (ti TaskInfo) RestoreFiles() error {
+	return ti.syncFiles(ti.TaskDir(), workspace.Dir())
+}
+
+func (ti TaskInfo) CopyFromTemp(tmpDir string) error {
+	return ti.syncFiles(tmpDir, workspace.Dir())
+}
+
+func (ti TaskInfo) syncFiles(srcDir, dstDir string) error {
+	if err := io.CopyFile(files.TaskLocalFile(srcDir), files.TaskLocalFile(dstDir)); err != nil {
+		return errors.Wrap(err, "failed to copy task file")
+	}
+	if err := io.CopyFile(files.MainFile(srcDir), files.MainFile(dstDir)); err != nil {
+		return errors.Wrap(err, "failed to copy main file")
+	}
+	if err := io.CopyFile(files.TestFile(srcDir), files.TestFile(dstDir)); err != nil {
+		return errors.Wrap(err, "failed to copy test file")
+	}
+	if err := io.CopyFile(files.ModFile(srcDir), files.ModFile(dstDir)); err != nil {
+		return errors.Wrap(err, "failed to copy mod file")
+	}
+	if err := io.CopyFile(files.SumFile(srcDir), files.SumFile(dstDir)); err != nil {
+		return errors.Wrap(err, "failed to copy sum file")
+	}
+	return nil
 }
 
 func (t TaskInfo) Write(w io.Writer) error {

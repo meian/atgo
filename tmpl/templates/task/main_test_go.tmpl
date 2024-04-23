@@ -1,0 +1,63 @@
+package main
+
+import (
+	"bytes"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+func TestAtCoderMain(t *testing.T) {
+
+	tests := []struct {
+		name   string
+		index  int
+		input  string
+		output string
+	}{
+{{- range .Task.Samples }}
+		{
+			name:   "sample {{ .Index }}",
+			index:  {{ .Index }},
+			input:  "{{ stov .Input }}",
+			output: "{{ stov .Output }}",
+		},
+{{- end }}
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Logf("verify sample: %d", tt.index)
+			t.Logf("sample input:\n%s", tt.input)
+			t.Logf("expected output:\n%s", tt.output)
+
+			cmd := exec.Command("go", "run", "main.go")
+			cmd.Stdin = strings.NewReader(tt.input)
+			var stdout, stderr bytes.Buffer
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+			if dir, ok := testDir(); ok {
+				cmd.Dir = dir
+			}
+
+			err := cmd.Run()
+			t.Logf("stderr:\n%s", stderr.String())
+			if !assert.NoError(t, err) {
+				return
+			}
+			assert.Equal(t, tt.output, stdout.String())
+		})
+	}
+
+}
+
+func testDir() (string, bool) {
+	_, file, _, _ := runtime.Caller(0)
+	if len(file) == 0 {
+		return "", false
+	}
+	return filepath.Dir(file), true
+}

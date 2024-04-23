@@ -1,0 +1,20 @@
+package main
+
+// task       : {{ .Task.ID }}
+// URL        : {{ .ContestTask.TaskURL }}
+// title      : {{ .Task.Title }}
+// time limit : {{ duration .Task.TimeLimit }}
+// memory     : {{ mem .Task.Memory }}
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+func main() {
+	in := bufio.NewReader(os.Stdin)
+	var N int
+	fmt.Fscan(in, &N)
+	fmt.Println(N)
+}
