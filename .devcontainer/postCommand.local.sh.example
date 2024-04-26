@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# script for customize local environment.
+
+u=${1:?not set user}
+
+user='some'
+mail='some@example.com'
+
+cmd="$(cat << CMD
+git config --global user.name $user
+git config --global user.email $mail
+CMD
+)"
+
+echo run postCommand.local.sh
+echo "$cmd"
+eval "$cmd"

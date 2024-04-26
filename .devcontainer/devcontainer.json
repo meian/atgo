@@ -1,0 +1,22 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
+{
+	"name": "Go",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"USERNAME": "vscode"
+		}
+	},
+	"containerEnv": {
+		"ATGO_WORKSPACE": "/workspace"
+	},
+	"postCreateCommand": "./.devcontainer/postCommand.sh vscode",
+	"mounts": [
+		"source=go-cache-volume,target=/home/vscode/.cache/go-build,type=volume",
+		"source=go-pkg-volume,target=/go/pkg,type=volume"
+	],
+	"workspaceMount": "source=${localWorkspaceFolder},target=/atgo,type=bind,consistency=cached",
+	"workspaceFolder": "/atgo",
+	"remoteUser": "vscode"
+}
