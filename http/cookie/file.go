@@ -1,4 +1,4 @@
-package cookiestore
+package cookie
 
 import (
 	"encoding/gob"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func Load(url *url.URL, file string, jar http.CookieJar) error {
+func LoadFrom(url *url.URL, file string, jar http.CookieJar) error {
 	f, err := os.Open(file)
 	if err != nil {
 		return nil
@@ -21,13 +21,8 @@ func Load(url *url.URL, file string, jar http.CookieJar) error {
 	return nil
 }
 
-func Save(url *url.URL, file string, jar http.CookieJar) error {
-	var cookies []*http.Cookie
-	for _, cookie := range jar.Cookies(url) {
-		if cookie.MaxAge > 0 {
-			cookies = append(cookies, cookie)
-		}
-	}
+func SaveTo(url *url.URL, file string, jar http.CookieJar) error {
+	cookies := jar.Cookies(url)
 	if len(cookies) == 0 {
 		return nil
 	}

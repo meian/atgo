@@ -12,7 +12,7 @@ import (
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/flags"
 	"github.com/meian/atgo/http"
-	"github.com/meian/atgo/http/cookiestore"
+	"github.com/meian/atgo/http/cookie"
 	"github.com/meian/atgo/http/roundtrippers"
 	"github.com/meian/atgo/io"
 	"github.com/meian/atgo/logs"
@@ -108,14 +108,18 @@ func initializeDatabase(cmd *cobra.Command) error {
 
 func initializeHTTPClient(cmd *cobra.Command) error {
 	logger := logs.FromContext(cmd.Context())
-	jar, _ := cookiejar.New(nil)
+	jopt := cookie.JarOption{
+		IgnorePaths: []string{url.HomePath},
+	}
+	baseJar, _ := cookiejar.New(nil)
+	jar := cookie.NewJar(baseJar, jopt)
 	cfile, modtime, exists := workspace.CookieFile()
 	logger = logger.With("cookie file", cfile).With("modtime", modtime)
 
 	if exists {
 		if time.Since(modtime) <= 24*time.Hour {
 			url := url.URL("", nil, nil)
-			if err := cookiestore.Load(url, cfile, jar); err != nil {
+			if err := cookie.LoadFrom(url, cfile, jar); err != nil {
 				logger.Error(err.Error())
 				return errors.New("failed to load cookie")
 			}
@@ -142,7 +146,7 @@ func terminateHTTPClient(cmd *cobra.Command) {
 	}
 	cfile, _, _ := workspace.CookieFile()
 	logger = logger.With("cookie file", cfile)
-	if err := cookiestore.Save(url.URL("", nil, nil), cfile, client.Jar); err != nil {
+	if err := cookie.SaveTo(url.URL("", nil, nil), cfile, client.Jar); err != nil {
 		logger.With("error", err.Error()).Warn("failed to store cookies")
 		return
 	}
