@@ -12,6 +12,7 @@ import (
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/flags"
 	"github.com/meian/atgo/http"
+	"github.com/meian/atgo/http/cookie"
 	"github.com/meian/atgo/http/cookiestore"
 	"github.com/meian/atgo/http/roundtrippers"
 	"github.com/meian/atgo/io"
@@ -108,7 +109,11 @@ func initializeDatabase(cmd *cobra.Command) error {
 
 func initializeHTTPClient(cmd *cobra.Command) error {
 	logger := logs.FromContext(cmd.Context())
-	jar, _ := cookiejar.New(nil)
+	jopt := cookie.JarOption{
+		IgnorePaths: []string{url.HomePath},
+	}
+	baseJar, _ := cookiejar.New(nil)
+	jar := cookie.NewJar(baseJar, jopt)
 	cfile, modtime, exists := workspace.CookieFile()
 	logger = logger.With("cookie file", cfile).With("modtime", modtime)
 
