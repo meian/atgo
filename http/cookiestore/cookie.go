@@ -22,12 +22,7 @@ func Load(url *url.URL, file string, jar http.CookieJar) error {
 }
 
 func Save(url *url.URL, file string, jar http.CookieJar) error {
-	var cookies []*http.Cookie
-	for _, cookie := range jar.Cookies(url) {
-		if cookie.MaxAge > 0 {
-			cookies = append(cookies, cookie)
-		}
-	}
+	cookies := jar.Cookies(url)
 	if len(cookies) == 0 {
 		return nil
 	}
