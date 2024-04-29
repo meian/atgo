@@ -30,7 +30,7 @@ func New(out io.Writer, level slog.Level) *slog.Logger {
 	handler := clog.New(
 		clog.WithWriter(out),
 		clog.WithLevel(level),
-		clog.WithTimeFmt("2006-01-02 15:04:05"),
+		clog.WithTimeFmt("2006-01-02 15:04:05.999"),
 		clog.WithColorMap(colorDefault),
 		clog.WithPrinter(clog.IndentPrinter),
 		clog.WithSource(true),

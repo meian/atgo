@@ -1,19 +1,21 @@
 package roundtrippers
 
 import (
-	"net/http"
+	gohttp "net/http"
 	"time"
+
+	"github.com/meian/atgo/http"
 )
 
 type RateLimitRoundTripper struct {
-	transport http.RoundTripper
-	lastTime  time.Time
+	transport gohttp.RoundTripper
 	interval  time.Duration
+	lastTime  time.Time
 }
 
-var _ http.RoundTripper = &RateLimitRoundTripper{}
+var _ gohttp.RoundTripper = &RateLimitRoundTripper{}
 
-func NewRateLimitRoundTripper(transport http.RoundTripper, interval time.Duration) http.RoundTripper {
+func NewRateLimitRoundTripper(transport gohttp.RoundTripper, interval time.Duration) gohttp.RoundTripper {
 	if interval <= 0 {
 		return transport
 	}
@@ -23,12 +25,20 @@ func NewRateLimitRoundTripper(transport http.RoundTripper, interval time.Duratio
 	}
 }
 
-func (rt *RateLimitRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	now := time.Now()
-	wait := rt.lastTime.Add(rt.interval).Sub(now)
-	if wait > 0 {
-		time.Sleep(wait)
+func (rt *RateLimitRoundTripper) RoundTrip(req *gohttp.Request) (*gohttp.Response, error) {
+	skipWait := http.IsSkipWait(req.Context())
+	if !skipWait {
+		wait := time.Until(rt.lastTime.Add(rt.interval))
+		if wait > 0 {
+			time.Sleep(wait)
+		}
 	}
-	rt.lastTime = time.Now()
-	return rt.transport.RoundTrip(req)
+	next := time.Now()
+	resp, err := rt.transport.RoundTrip(req)
+	// レスポンスがリダイレクトの場合は次回を待機しない
+	// => リダイレクトでなければ正常も異常も次回は待機対象
+	if resp.StatusCode != gohttp.StatusFound && !skipWait {
+		rt.lastTime = next
+	}
+	return resp, err
 }

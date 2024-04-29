@@ -2,12 +2,13 @@ package crawler
 
 import (
 	"context"
-	"net/http"
+	gohttp "net/http"
 	gourl "net/url"
 
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/csrf"
+	"github.com/meian/atgo/http"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/url"
 	"github.com/pkg/errors"
@@ -17,7 +18,7 @@ type Login struct {
 	crawler *Crawler
 }
 
-func NewLogin(client *http.Client) *Login {
+func NewLogin(client *gohttp.Client) *Login {
 	crawler := NewCrawler(url.LoginPath).
 		WithClient(client).
 		WithLoadCookie(false)
@@ -36,6 +37,7 @@ func (q *loginQuery) URLValues() gourl.Values {
 
 func (c *Login) Do(ctx context.Context, req *requests.Login) (*responses.Login, error) {
 	logger := logs.FromContext(ctx).With("continue", req.Continue)
+	ctx = http.ContextWithSkipWait(ctx)
 	resp, err := c.crawler.Post(ctx, &loginQuery{
 		Continue: req.Continue,
 	}, req)
@@ -44,7 +46,7 @@ func (c *Login) Do(ctx context.Context, req *requests.Login) (*responses.Login, 
 		return nil, errors.New("failed to post document")
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != gohttp.StatusOK {
 		logger.With("status_code", resp.StatusCode).Error("unexpected status code")
 		return nil, errors.New("unexpected status code for login")
 	}
