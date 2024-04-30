@@ -1,0 +1,7 @@
+atgo
+{{- if .Version }} {{ .Version }}{{ else }} (No Version){{ end }}
+{{- if .CommitSHA }} (commit SHA: {{ .CommitSHA }}){{ end }}
+{{ .Description }}
+{{ if not .Version -}}
+Version is not set, please set the version at build with -ldflags '-X {{ .FlagsPkg }}.Version=vx.x.x -X {{ .FlagsPkg }}.CommitSHA=xxxxxx'
+{{ end -}}
