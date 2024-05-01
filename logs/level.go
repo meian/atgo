@@ -2,6 +2,7 @@ package logs
 
 import (
 	"log/slog"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -16,25 +17,20 @@ const (
 
 var (
 	levelLookup map[string]slog.Level
-	textLookup  map[slog.Level]string
 )
 
 func init() {
 	levelLookup = map[string]slog.Level{
-		"NONE":  LevelNone,
-		"ERROR": LevelError,
-		"WARN":  LevelWarn,
-		"INFO":  LevelInfo,
-		"DEBUG": LevelDebug,
-	}
-	textLookup = make(map[slog.Level]string, len(levelLookup))
-	for k, v := range levelLookup {
-		textLookup[v] = k
+		"none":  LevelNone,
+		"error": LevelError,
+		"warn":  LevelWarn,
+		"info":  LevelInfo,
+		"debug": LevelDebug,
 	}
 }
 
 func ParseLevel(s string) (slog.Level, error) {
-	level, ok := levelLookup[s]
+	level, ok := levelLookup[strings.ToLower(s)]
 	if !ok {
 		return LevelNone, errors.Errorf("invalid log level: %s", s)
 	}

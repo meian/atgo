@@ -9,7 +9,8 @@
 		}
 	},
 	"containerEnv": {
-		"ATGO_WORKSPACE": "/workspace"
+		"ATGO_WORKSPACE": "/workspace",
+		"ATGO_DEFAULT_LOG_LEVEL": "info"
 	},
 	"postCreateCommand": "./.devcontainer/postCommand.sh vscode",
 	"mounts": [
