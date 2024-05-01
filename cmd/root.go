@@ -10,7 +10,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/meian/atgo/config"
 	"github.com/meian/atgo/database"
-	"github.com/meian/atgo/flags"
 	"github.com/meian/atgo/http"
 	"github.com/meian/atgo/http/cookie"
 	"github.com/meian/atgo/http/roundtrippers"
@@ -68,7 +67,7 @@ func initializeOutput(cmd *cobra.Command) error {
 // initializeLogging はロガーの初期化を行う
 // グローバルに設定されたフラグによって出力されるレベルを変更してロガーを作成する
 func initializeLogging(cmd *cobra.Command) error {
-	level, err := logs.ParseLevel(flags.DefaultLogLevel)
+	level, err := logs.ParseLevel(config.Config.DefaultLogLevel)
 	if err != nil {
 		return err
 	}
