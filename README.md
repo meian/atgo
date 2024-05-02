@@ -2,6 +2,8 @@
 
 `atgo` is a tool for Gophers that allows them to perform AtCoder operations using commands.
 
+- [日本語](./README-ja.md)
+
 ## Installation
 
 To install the latest version of `atgo`, run the following command:
