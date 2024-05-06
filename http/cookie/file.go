@@ -7,6 +7,11 @@ import (
 	"os"
 )
 
+var (
+	ignoreLoads []func() string
+	ignoreSaves []func() string
+)
+
 func LoadFrom(url *url.URL, file string, jar http.CookieJar) error {
 	f, err := os.Open(file)
 	if err != nil {
@@ -35,4 +40,30 @@ func SaveTo(url *url.URL, file string, jar http.CookieJar) error {
 		return err
 	}
 	return nil
+}
+
+func IgnoreLoad(pathFunc func() string) {
+	ignoreLoads = append(ignoreLoads, pathFunc)
+}
+
+func ShouldLoad(path string) bool {
+	for _, p := range ignoreLoads {
+		if p() == path {
+			return false
+		}
+	}
+	return true
+}
+
+func IgnoreSave(pathFunc func() string) {
+	ignoreSaves = append(ignoreSaves, pathFunc)
+}
+
+func ShouldSave(path string) bool {
+	for _, p := range ignoreSaves {
+		if p() == path {
+			return false
+		}
+	}
+	return true
 }

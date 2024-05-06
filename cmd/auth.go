@@ -8,6 +8,7 @@ import (
 	"github.com/meian/atgo/crawler"
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/http"
+	"github.com/meian/atgo/http/cookie"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/url"
 	"github.com/meian/atgo/workspace"
@@ -93,5 +94,6 @@ func tryLogin(ctx context.Context, username, password string) error {
 }
 
 func init() {
+	cookie.IgnoreLoad(authCmd.CommandPath)
 	rootCmd.AddCommand(authCmd)
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/meian/atgo/auth"
+	"github.com/meian/atgo/http/cookie"
 	"github.com/meian/atgo/io"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/workspace"
@@ -35,5 +36,6 @@ var authVerifyCmd = &cobra.Command{
 }
 
 func init() {
+	cookie.IgnoreLoad(authVerifyCmd.CommandPath)
 	authCmd.AddCommand(authVerifyCmd)
 }
