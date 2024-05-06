@@ -112,22 +112,23 @@ func initializeHTTPClient(cmd *cobra.Command) error {
 	}
 	baseJar, _ := cookiejar.New(nil)
 	jar := cookie.NewJar(baseJar, jopt)
-	cfile, modtime, exists := workspace.CookieFile()
-	logger = logger.With("cookie file", cfile).With("modtime", modtime)
-
-	if exists {
-		if time.Since(modtime) <= 24*time.Hour {
-			url := url.URL("", nil, nil)
-			if err := cookie.LoadFrom(url, cfile, jar); err != nil {
-				logger.Error(err.Error())
-				return errors.New("failed to load cookie")
+	if cookie.ShouldLoad(cmd.CommandPath()) {
+		cfile, modtime, exists := workspace.CookieFile()
+		logger = logger.With("cookie file", cfile).With("modtime", modtime)
+		if exists {
+			if time.Since(modtime) <= 24*time.Hour {
+				url := url.URL("", nil, nil)
+				if err := cookie.LoadFrom(url, cfile, jar); err != nil {
+					logger.Error(err.Error())
+					return errors.New("failed to load cookie")
+				}
+				logger.Info("load cookie")
+			} else {
+				if err := os.Remove(cfile); err != nil {
+					logger.With("error", err.Error()).Warn("failed to remove old cookie file")
+				}
+				logger.Info("skip loading because cookie file is too old")
 			}
-			logger.Info("load cookie")
-		} else {
-			if err := os.Remove(cfile); err != nil {
-				logger.With("error", err.Error()).Warn("failed to remove old cookie file")
-			}
-			logger.Info("skip loading because cookie file is too old")
 		}
 	}
 	rt := roundtrippers.NewRateLimitRoundTripper(gohttp.DefaultTransport, 1*time.Second)
@@ -137,6 +138,9 @@ func initializeHTTPClient(cmd *cobra.Command) error {
 }
 
 func terminateHTTPClient(cmd *cobra.Command) {
+	if !cookie.ShouldSave(cmd.CommandPath()) {
+		return
+	}
 	logger := logs.FromContext(cmd.Context())
 	client := http.ClientFromContext(cmd.Context())
 	if client == nil || client.Jar == nil {
