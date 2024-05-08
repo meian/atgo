@@ -9,7 +9,7 @@
 To install the latest version of `atgo`, run the following command:
 
 ```bash
-go install github.com/yourusername/atgo@latest
+go install github.com/meian/atgo@latest
 ```
 
 ## Operating Environment
