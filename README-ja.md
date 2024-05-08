@@ -9,7 +9,7 @@
 `atgo` は以下のコマンドでインストールします。
 
 ```bash
-go install github.com/yourusername/atgo@latest
+go install github.com/meian/atgo@latest
 ```
 
 ## 動作環境
