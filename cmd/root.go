@@ -112,7 +112,7 @@ func initializeHTTPClient(cmd *cobra.Command) error {
 		cfile, modtime, exists := workspace.CookieFile()
 		logger = logger.With("cookie file", cfile).With("modtime", modtime)
 		if exists {
-			if time.Since(modtime) <= 24*time.Hour {
+			if time.Since(modtime) <= 24*time.Hour*30 {
 				url := url.URL("", nil, nil)
 				if err := cookie.LoadFrom(url, cfile, jar); err != nil {
 					logger.Error(err.Error())
