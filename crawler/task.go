@@ -60,7 +60,7 @@ func (c *TaskCrawler) Do(ctx context.Context, req *requests.Task) (*responses.Ta
 		Score:     score,
 		Samples:   samples,
 		CSRFToken: csrf.FromDocument(doc),
-		LoggedIn:  c.loggedIn(ctx, req.ContestID, req.TaskID, doc),
+		LoggedIn:  c.crawler.LoggedIn(ctx, doc),
 	}, nil
 }
 
@@ -131,16 +131,6 @@ func (c *TaskCrawler) parseSamples(ctx context.Context, doc *goquery.Document) (
 		})
 	}
 	return samples, nil
-}
-
-func (c *TaskCrawler) loggedIn(ctx context.Context, contestID, taskID string, doc *goquery.Document) bool {
-	// params := map[string]string{"contestID": contestID}
-	// path := url.URL(url.TaskPath, params, nil).Path
-	form := doc.Find("form")
-	in := form.FilterFunction(func(i int, s *goquery.Selection) bool {
-		return s.Find(fmt.Sprintf("input[type='hidden'][value='%s']", taskID)).Length() > 0
-	}).Length() > 0
-	return in
 }
 
 func (c *TaskCrawler) taskStatement(ctx context.Context, doc *goquery.Document) (*goquery.Selection, error) {

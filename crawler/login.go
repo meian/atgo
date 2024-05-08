@@ -50,8 +50,12 @@ func (c *Login) Do(ctx context.Context, req *requests.Login) (*responses.Login, 
 		logger.With("status_code", resp.StatusCode).Error("unexpected status code")
 		return nil, errors.New("unexpected status code for login")
 	}
+	doc, err := c.crawler.documentFromReader(ctx, resp.Body)
+	if err != nil {
+		return nil, err
+	}
 	return &responses.Login{
-		LoggedIn:  resp.Request.URL.String() == req.Continue,
+		LoggedIn:  c.crawler.LoggedIn(ctx, doc),
 		CSRFToken: csrf.FromCookies(ctx, resp.Cookies()),
 	}, nil
 }

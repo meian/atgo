@@ -15,6 +15,7 @@ const (
 	TaskPath           = "/contests/{contestID}/tasks/{id}"
 	SubmitPath         = "/contests/{contestID}/submit"
 	MySubmissionPath   = "/contests/{contestID}/submissions/me"
+	SettingsPath       = "/settings"
 )
 
 func LoginURL() string {
