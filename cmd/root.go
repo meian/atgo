@@ -107,16 +107,12 @@ func initializeDatabase(cmd *cobra.Command) error {
 
 func initializeHTTPClient(cmd *cobra.Command) error {
 	logger := logs.FromContext(cmd.Context())
-	jopt := cookie.JarOption{
-		IgnorePaths: []string{url.HomePath},
-	}
-	baseJar, _ := cookiejar.New(nil)
-	jar := cookie.NewJar(baseJar, jopt)
+	jar, _ := cookiejar.New(nil)
 	if cookie.ShouldLoad(cmd.CommandPath()) {
 		cfile, modtime, exists := workspace.CookieFile()
 		logger = logger.With("cookie file", cfile).With("modtime", modtime)
 		if exists {
-			if time.Since(modtime) <= 24*time.Hour {
+			if time.Since(modtime) <= 24*time.Hour*30 {
 				url := url.URL("", nil, nil)
 				if err := cookie.LoadFrom(url, cfile, jar); err != nil {
 					logger.Error(err.Error())

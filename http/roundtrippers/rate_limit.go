@@ -35,10 +35,13 @@ func (rt *RateLimitRoundTripper) RoundTrip(req *gohttp.Request) (*gohttp.Respons
 	}
 	next := time.Now()
 	resp, err := rt.transport.RoundTrip(req)
+	if err != nil {
+		return nil, err
+	}
 	// レスポンスがリダイレクトの場合は次回を待機しない
 	// => リダイレクトでなければ正常も異常も次回は待機対象
 	if resp.StatusCode != gohttp.StatusFound && !skipWait {
 		rt.lastTime = next
 	}
-	return resp, err
+	return resp, nil
 }

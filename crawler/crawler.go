@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
@@ -157,4 +158,9 @@ func (c Crawler) documentFromReader(ctx context.Context, respBody io.Reader) (*g
 	logger.Debug("parsed document from response")
 
 	return doc, nil
+}
+
+func (c Crawler) LoggedIn(ctx context.Context, doc *goquery.Document) bool {
+	selector := fmt.Sprintf("a[href='%s']", url.SettingsPath)
+	return doc.Find(selector).Length() > 0
 }
