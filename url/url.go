@@ -19,7 +19,7 @@ const (
 )
 
 func LoginURL() string {
-	return URL("/login", nil, nil).String()
+	return URL(LoginPath, nil, nil).String()
 }
 
 func HomeURL() string {
