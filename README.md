@@ -85,7 +85,7 @@ To submit your code, run the following command:
 The target for submission is the task that was last initialized with `atgo task local-init`.
 
 ```bash
-$ atgo submission
+$ atgo submit
 ````
 
 ### Additional Commands

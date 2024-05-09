@@ -86,7 +86,7 @@ $ atgo task local-init [タスクID]
 提出先の問題は、`atgo task local-init` で最後にローカルに用意した問題になります。
 
 ```bash
-$ atgo submission
+$ atgo submit
 ```
 
 ### その他のコマンド
