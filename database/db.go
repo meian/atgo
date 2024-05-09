@@ -5,10 +5,10 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/glebarez/sqlite"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
