@@ -67,7 +67,7 @@ func (c *Contest) Do(ctx context.Context, req *requests.Contest) (*responses.Con
 
 func (c *Contest) parseTitle(ctx context.Context, doc *goquery.Document) (string, error) {
 	// <nav><ul class="nav"><li><a class="contest-title" href="/contests/abc342">AtCoder Beginner Contest 342</a></li></ul></nav>
-	title := doc.FindMatcher(goquery.Single("nav ul.nav li a.contest-title")).Text()
+	title := strings.TrimSpace(doc.FindMatcher(goquery.Single("nav ul.nav li a.contest-title")).Text())
 	logs.FromContext(ctx).With("text", title).Debug("find result")
 	if title == "" {
 		return "", errors.New("no title is found")
