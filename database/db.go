@@ -5,10 +5,10 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/glebarez/sqlite"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -44,12 +44,4 @@ func Delete(ctx context.Context) error {
 		return errors.New("failed to remove db file")
 	}
 	return nil
-}
-
-func NewIfExists(ctx context.Context) (*gorm.DB, bool) {
-	_, exists := workspace.DBFile()
-	if exists {
-		return nil, false
-	}
-	return New(ctx), true
 }
