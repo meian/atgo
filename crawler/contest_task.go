@@ -86,7 +86,7 @@ func (c *ContestTask) parseTask(ctx context.Context, tr *goquery.Selection) (*re
 		logger.Error("symbol must not be empty")
 		return nil, errors.New("failed to find symbol")
 	}
-	title := tds.Eq(1).Text()
+	title := strings.TrimSpace(tds.Eq(1).Text())
 	if len(title) == 0 {
 		logger.Error("title must not be empty")
 		return nil, errors.New("failed to find title")
