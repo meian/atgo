@@ -45,11 +45,3 @@ func Delete(ctx context.Context) error {
 	}
 	return nil
 }
-
-func NewIfExists(ctx context.Context) (*gorm.DB, bool) {
-	_, exists := workspace.DBFile()
-	if exists {
-		return nil, false
-	}
-	return New(ctx), true
-}
