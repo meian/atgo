@@ -1,11 +1,15 @@
 package flags
 
-var (
-	Version string
+import (
+	"reflect"
 )
 
-func init() {
-	if Version == "" {
-		Version = "no version, please set with ldflags"
-	}
+var (
+	Version   string
+	CommitSHA string
+)
+
+func Package() string {
+	type tip int
+	return reflect.TypeOf(tip(0)).PkgPath()
 }

@@ -1,0 +1,105 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        arch: [amd64, arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: './go.mod'
+
+      - name: Set environment
+        run: |
+          key='${{matrix.goos}}_${{matrix.arch}}'
+          an="artifact_${key}"
+          fn="atgo_${key}"
+          if [ '${{matrix.goos}}' == 'windows' ]; then
+            fn=${fn}.exe
+          fi
+          cat << ENV >> $GITHUB_ENV
+          APP_VERSION=${GITHUB_REF#refs/tags/}
+          ARTIFACT_NAME=${an}
+          BIN_PATH=out/${fn}
+          ENV
+
+      - name: Download go modules
+        run: go mod download
+
+      - name: Go build
+        run: |
+          ROOT_PKG=$(go list .)
+          COMMIT_SHA=$(echo ${{github.sha}} | cut -c1-10)
+          FLAGS="-X $ROOT_PKG/flags.Version=$APP_VERSION -X $ROOT_PKG/flags.CommitSHA=$COMMIT_SHA"
+          GOOS=${{matrix.goos}} GOARCH=${{matrix.arch}} go build -ldflags "$FLAGS" -o $BIN_PATH .
+        shell: bash
+
+      - name: Upload assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.ARTIFACT_NAME}}
+          path: ${{env.BIN_PATH}}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download (linux - amd64)
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_linux_amd64
+          path: releases
+
+      - name: Download (linux - arm64)
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_linux_arm64
+          path: releases
+
+      - name: Download (windows - amd64)
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_windows_amd64
+          path: releases
+
+      - name: Download (windows - arm64)
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_windows_arm64
+          path: releases
+
+      - name: Download (darwin - amd64)
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_darwin_amd64
+          path: releases
+
+      - name: Download (darwin - arm64)
+        uses: actions/download-artifact@v4
+        with:
+          name: artifact_darwin_arm64
+          path: releases
+
+      - name: Add execute permission
+        run: |
+          chmod +x releases/atgo_linux*
+          chmod +x releases/atgo_darwin*
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{secrets.RELEASE_TOKEN}}
+          draft: true
+          files: releases/*
