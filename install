@@ -1,0 +1,169 @@
+#!/bin/bash -e
+
+OWNER='meian'
+TOOL='atgo'
+REPOS="$OWNER/$TOOL"
+ROOT_PKG="github.com/$REPOS"
+REPO_URL="https://$ROOT_PKG"
+
+goos() {
+    case $(uname -s) in
+        Linux)  echo linux ;;
+        Darwin) echo darwin ;;
+        *)      echo "Unsupported OS: $(uname -s)" >&2; exit 1 ;;
+    esac
+}
+
+goarch() {
+    case $(uname -m) in
+        x86_64)  echo amd64 ;;
+        aarch64) echo arm64 ;;
+        *)       echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
+    esac
+}
+
+bindir() {
+    local binpath=${1}
+    if [ -n "$binpath" ]; then
+        dirname $binpath
+        return
+    fi
+    if [ `id -un` = "root" ]; then
+        echo "/usr/local/bin"
+    else
+        echo "$HOME/.local/bin"
+    fi
+}
+
+binpath() {
+    echo "$(bindir)/atgo"
+}
+
+tagname() {
+    if [ -z "$ATENV_TAG" ]; then
+        ATENV_TAG=$(curl -s --fail "https://api.github.com/repos/$REPOS/releases/latest" \
+            | grep tag_name | cut -d'"' -f4)
+    fi
+    echo $ATENV_TAG
+}
+
+tagcommitsha() {
+    local tagname=$1
+    git ls-remote $REPO_URL --tags $tagname | awk '{print $1}' | cut -c1-10
+}
+
+targeturl() {
+    local goos=$1
+    local goarch=$2
+    local tagname=$3
+    set +e
+    local target=$(curl -s "https://api.github.com/repos/$REPOS/releases/tags/${tagname}" \
+        | grep browser_download_url \
+        | cut -d'"' -f4 \
+        | grep "atgo_${goos}_${goarch}")
+    set -e
+    if [ -z "$target" ]; then
+        echo "Not found prebuilt binary for ${goos}/${goarch} in ${tagname}" >&2
+        return
+    fi
+    echo $target
+}
+
+exportenv() {
+    local tagname=$(tagname)
+    local url=$(targeturl $(goos) $(goarch) $tagname)
+    local mode=$ATENV_MODE
+    if [ -z "$mode" ]; then
+        if [ -n "$url" ]; then
+            mode='download'
+        else
+            mode='install'
+        fi
+    fi
+    local sha=$(tagcommitsha $tagname)
+    cat << EOF
+export ATENV_MODE='${mode}'
+export ATENV_GOOS='$(goos)'
+export ATENV_GOARCH='$(goarch)'
+export ATENV_TAG='${tagname}'
+export ATENV_SHA='$(tagcommitsha $tagname)'
+export ATENV_BINPATH='$(binpath)'
+export ATENV_BINURL='${url}'
+export ATENV_FLAGS='-X $ROOT_PKG/flags.Version=${tagname} -X $ROOT_PKG/flags.CommitSHA=$(tagcommitsha $tagname)'
+export ATENV_ROOTPKG='$ROOT_PKG'
+EOF
+}
+
+releaseexists() {
+    local tagname=$1
+    local sha=$(tagcommitsha $tagname)
+    [ -n "$sha" ] && return 0 || return 1
+}
+
+buildenvexists() {
+    go version > /dev/null 2>&1 || {
+        echo "Not found go command" >&2
+        return 1
+    }
+}
+
+download() {
+    local url=$1
+    local binpath=$2
+    mkdir -p $(bindir $binpath) || {
+        echo "Failed to create directory: $(dirname $binpath)" >&2
+        exit 1
+    }
+    echo "Downloading prebuilt binary from $url ..."
+    curl -L --fail $url -o $binpath
+    chmod +x $binpath
+}
+
+install() {
+    local tagname=$1
+    local flags=$2
+    local binpath=$3
+    echo "Installing atgo $tagname with go install ..."
+    GOBIN=$(dirname $binpath) go install -ldflags "$flags" $ROOT_PKG@$tagname
+}
+
+# main
+
+if [ ${1:-none} == "--tag" ] ; then
+    ATENV_TAG=${2}
+fi
+
+if [ -z "$ATENV_MODE" ]; then
+    eval $(exportenv)
+fi
+
+if ! releaseexists $ATENV_TAG; then
+    echo "Not found release atgo $(tagname)" >&2
+    exit 1
+fi
+
+echo "Install atgo $ATENV_TAG"
+
+case "$ATENV_MODE" in
+    download)
+        download "$ATENV_BINURL" "$ATENV_BINPATH"
+        ;;
+    install)
+        install "$ATENV_TAG" "$ATENV_FLAGS" "$ATENV_BINPATH"
+        ;;
+    *)
+        echo "Unsupported mode: $ATENV_MODE" >&2
+        exit 1
+        ;;
+esac
+
+echo "Installed atgo to $ATENV_BINPATH"
+$ATENV_BINPATH version --long
+
+bindir=$(bindir $ATENV_BINPATH)
+echo $PATH | tr ':' '\n' | grep -qE "^${bindir}\$" || {
+    echo "export PATH=\$PATH:${bindir}" >> ~/.bashrc
+    echo "add ${bindir} to PATH"
+    echo "Please restart shell to take effect or run below command:"
+    echo "  source ~/.bashrc"
+}

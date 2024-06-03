@@ -6,11 +6,20 @@
 
 ## Installation
 
-To install the latest version of `atgo`, run the following command:
+`atgo` is installed with the following command.
 
-```bash
-go install github.com/meian/atgo@latest
 ```
+curl -sSfL https://raw.githubusercontent.com/meian/atgo/main/install | bash
+```
+
+To use specify the build version, use the following command.
+
+```
+curl -sSfL https://raw.githubusercontent.com/meian/atgo/main/install | bash -s -- --tag v0.0.1
+```
+
+If a pre-built binary is available at [release](https://github.com/meian/atgo/releases), download the binary.  
+For OS/architectures that do not have pre-built binaries, the installer will build them internally using `go install`, which requires Go 1.22 or higher.
 
 ## Operating Environment
 
