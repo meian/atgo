@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        goos: [linux, windows, darwin]
+        goos: [linux, darwin]
         arch: [amd64, arm64]
     runs-on: ubuntu-latest
     steps:
@@ -26,9 +26,6 @@ jobs:
           key='${{matrix.goos}}_${{matrix.arch}}'
           an="artifact_${key}"
           fn="atgo_${key}"
-          if [ '${{matrix.goos}}' == 'windows' ]; then
-            fn=${fn}.exe
-          fi
           cat << ENV >> $GITHUB_ENV
           APP_VERSION=${GITHUB_REF#refs/tags/}
           ARTIFACT_NAME=${an}
@@ -66,18 +63,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: artifact_linux_arm64
-          path: releases
-
-      - name: Download (windows - amd64)
-        uses: actions/download-artifact@v4
-        with:
-          name: artifact_windows_amd64
-          path: releases
-
-      - name: Download (windows - arm64)
-        uses: actions/download-artifact@v4
-        with:
-          name: artifact_windows_arm64
           path: releases
 
       - name: Download (darwin - amd64)
