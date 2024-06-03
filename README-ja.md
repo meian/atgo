@@ -8,9 +8,18 @@
 
 `atgo` は以下のコマンドでインストールします。
 
-```bash
-go install github.com/meian/atgo@latest
 ```
+curl -sSfL https://raw.githubusercontent.com/meian/atgo/main/install | bash
+```
+
+ビルドバージョンを指定する場合は、以下のようにします。
+
+```
+curl -sSfL https://raw.githubusercontent.com/meian/atgo/main/install | bash -s -- --tag v0.0.1
+```
+
+[リリース](https://github.com/meian/atgo/releases) にビルド済のバイナリが用意されている場合はバイナリをダウンロードします。  
+ビルド済バイナリがないOS/アーキテクチャの場合は、インストーラー内部で `go install` によってビルドされますが、この場合は Go 1.22 以上が必要です。
 
 ## 動作環境
 
