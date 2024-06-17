@@ -52,37 +52,23 @@ func (ti TaskInfo) StoreFiles() error {
 		return errors.Wrap(err, "failed to write task file")
 	}
 	tdir := ti.TaskDir()
-	if err := os.MkdirAll(tdir, 0755); err != nil {
-		return errors.Wrap(err, "failed to create task directory")
+	if err := io.Clear(tdir); err != nil {
+		return errors.Wrap(err, "failed to clear task directory")
 	}
-	return ti.syncFiles(wdir, tdir)
+	return io.Move(wdir, tdir)
 }
 
 func (ti TaskInfo) RestoreFiles() error {
-	return ti.syncFiles(ti.TaskDir(), workspace.Dir())
+	wdir := workspace.Dir()
+	tdir := ti.TaskDir()
+	if err := io.Clear(wdir); err != nil {
+		return errors.Wrap(err, "failed to clear workspace directory")
+	}
+	return io.Move(tdir, wdir)
 }
 
-func (ti TaskInfo) CopyFromTemp(tmpDir string) error {
-	return ti.syncFiles(tmpDir, workspace.Dir())
-}
-
-func (ti TaskInfo) syncFiles(srcDir, dstDir string) error {
-	if err := io.CopyFile(files.TaskLocalFile(srcDir), files.TaskLocalFile(dstDir)); err != nil {
-		return errors.Wrap(err, "failed to copy task file")
-	}
-	if err := io.CopyFile(files.MainFile(srcDir), files.MainFile(dstDir)); err != nil {
-		return errors.Wrap(err, "failed to copy main file")
-	}
-	if err := io.CopyFile(files.TestFile(srcDir), files.TestFile(dstDir)); err != nil {
-		return errors.Wrap(err, "failed to copy test file")
-	}
-	if err := io.CopyFile(files.ModFile(srcDir), files.ModFile(dstDir)); err != nil {
-		return errors.Wrap(err, "failed to copy mod file")
-	}
-	if err := io.CopyFile(files.SumFile(srcDir), files.SumFile(dstDir)); err != nil {
-		return errors.Wrap(err, "failed to copy sum file")
-	}
-	return nil
+func (ti TaskInfo) MoveFromTemp(tmpDir string) error {
+	return io.Move(tmpDir, workspace.Dir())
 }
 
 func (t TaskInfo) Write(w io.Writer) error {
