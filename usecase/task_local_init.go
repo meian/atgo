@@ -76,10 +76,10 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 	}
 
 	logger.Info("create new task files")
-	tmpDir, err := os.MkdirTemp("", "atgo")
+	tmpDir, err := workspace.LocalTmpDir()
 	if err != nil {
 		logger.Error(err.Error())
-		return nil, errors.New("failed to create temp work directory")
+		return nil, errors.New("failed to create local temp directory")
 	}
 	defer os.RemoveAll(tmpDir)
 	logger = logger.With("temp directory", tmpDir)
