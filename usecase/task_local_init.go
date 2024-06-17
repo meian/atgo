@@ -132,13 +132,6 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 		return nil, errors.New("failed to copy files from temp directory")
 	}
 
-	mainfile := files.MainFile(workspace.Dir())
-	logger.Info(mainfile)
-	cmd = exec.Command("code", mainfile)
-	if err := cmd.Run(); err != nil {
-		logger.Error(err.Error())
-	}
-
 	return &TaskLocalInitResult{
 		ContestID: contest.ID,
 		TaskID:    task.ID,
