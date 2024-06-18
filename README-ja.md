@@ -4,6 +4,13 @@
 
 - [English](README.md)
 
+## 生成AIへのルールへの適合
+
+[AtCoder生成AI対策ルール - 20240607版](https://info.atcoder.jp/entry/llm-abc-rules-ja)
+
+AtCoderでは、ABCにおいて生成AIの利用を制限するため上記のドキュメントに記載のルールを設けています。  
+`atgo` では v0.0.4 でこのルールに対応する修正を行なったため、ABCへの参加においては v0.0.4 以降を利用してください。
+
 ## インストール
 
 `atgo` は以下のコマンドでインストールします。

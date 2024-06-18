@@ -76,10 +76,10 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 	}
 
 	logger.Info("create new task files")
-	tmpDir, err := os.MkdirTemp("", "atgo")
+	tmpDir, err := workspace.LocalTmpDir()
 	if err != nil {
 		logger.Error(err.Error())
-		return nil, errors.New("failed to create temp work directory")
+		return nil, errors.New("failed to create local temp directory")
 	}
 	defer os.RemoveAll(tmpDir)
 	logger = logger.With("temp directory", tmpDir)
@@ -95,6 +95,10 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 	if err := u.executeTaskTemplate(ctx, "go_mod", files.ModFile(tmpDir), task, ct); err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to create go.mod")
+	}
+	if err := u.createSamples(ctx, tmpDir, task); err != nil {
+		logger.Error(err.Error())
+		return nil, errors.New("failed to create samples")
 	}
 
 	w, err := os.Create(files.TaskLocalFile(tmpDir))
@@ -127,16 +131,9 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 		return nil, errors.New("failed to go mod tidy")
 	}
 
-	if err := info.CopyFromTemp(tmpDir); err != nil {
+	if err := info.MoveFromTemp(tmpDir); err != nil {
 		logger.Error(err.Error())
-		return nil, errors.New("failed to copy files from temp directory")
-	}
-
-	mainfile := files.MainFile(workspace.Dir())
-	logger.Info(mainfile)
-	cmd = exec.Command("code", mainfile)
-	if err := cmd.Run(); err != nil {
-		logger.Error(err.Error())
+		return nil, errors.New("failed to move files from temp directory")
 	}
 
 	return &TaskLocalInitResult{
@@ -194,6 +191,48 @@ func (u TaskLocalInit) executeTaskTemplate(ctx context.Context, name string, fil
 	if err := tt.Execute(w, data); err != nil {
 		logger.Error(err.Error())
 		return errors.Errorf("failed to create file: %s", filepath.Base(file))
+	}
+	return nil
+}
+
+func (u TaskLocalInit) createSamples(ctx context.Context, tmpDir string, task models.Task) error {
+	dir := files.SamplesDir(tmpDir)
+	logger := logs.FromContext(ctx).With("samples directory", dir)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		logger.Error(err.Error())
+		return errors.New("failed to create samples directory")
+	}
+	for _, s := range task.Samples {
+		if err := u.createSample(ctx, dir, s); err != nil {
+			logger.Error(err.Error())
+			return errors.New("failed to create sample")
+		}
+	}
+	return nil
+}
+
+func (u TaskLocalInit) createSample(ctx context.Context, dir string, sample models.TaskSample) error {
+	logger := logs.FromContext(ctx).With("sample", sample.ID)
+	sdir := filepath.Join(dir, sample.Index)
+	if err := os.Mkdir(sdir, 0755); err != nil {
+		logger.Error(err.Error())
+		return errors.New("failed to create sample directory")
+	}
+	if err := u.createSampleFile(sdir, "input.txt", sample.Input); err != nil {
+		logger.Error(err.Error())
+		return errors.New("failed to create input file")
+	}
+	if err := u.createSampleFile(sdir, "output.txt", sample.Output); err != nil {
+		logger.Error(err.Error())
+		return errors.New("failed to create output file")
+	}
+	return nil
+}
+
+func (u TaskLocalInit) createSampleFile(dir string, file string, text string) error {
+	fp := filepath.Join(dir, file)
+	if err := os.WriteFile(fp, []byte(text), 0644); err != nil {
+		return err
 	}
 	return nil
 }

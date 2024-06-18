@@ -26,7 +26,6 @@ func init() {
 		"nullint":    util.NullIntString,
 		"mem":        util.FormatMemory,
 		"duration":   util.FormatDuration,
-		"stov":       util.StringToVar,
 		"contesturl": url.ContestURL,
 		"taskurl":    url.TaskURL,
 		"shortFunc": func(s string) string {

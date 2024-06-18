@@ -1,36 +1,46 @@
 package main
 
+// test for
+// task       : {{ .Task.ID }}
+// URL        : {{ .ContestTask.TaskURL }}
+// title      : {{ .Task.Title }}
+// time limit : {{ duration .Task.TimeLimit }}
+// memory     : {{ mem .Task.Memory }}
+
 import (
 	"bytes"
+	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"sort"
+	"strconv"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+type testCase struct {
+	name   string
+	index  string
+	input  string
+	output string
+}
+
 func TestAtCoderMain(t *testing.T) {
 
-	tests := []struct {
-		name   string
-		index  int
-		input  string
-		output string
-	}{
-{{- range .Task.Samples }}
-		{
-			name:   "sample {{ .Index }}",
-			index:  {{ .Index }},
-			input:  "{{ stov .Input }}",
-			output: "{{ stov .Output }}",
-		},
-{{- end }}
+	dir, ok := testDir()
+	if !ok {
+		t.Fatal("failed to get test directory")
 	}
+
+	tests := loadTestCases(t, filepath.Join(dir, "testdata", "samples"))
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Logf("verify sample: %d", tt.index)
+			t.Logf("verify sample: %s", tt.index)
 			t.Logf("sample input:\n%s", tt.input)
 			t.Logf("expected output:\n%s", tt.output)
 
@@ -60,4 +70,59 @@ func testDir() (string, bool) {
 		return "", false
 	}
 	return filepath.Dir(file), true
+}
+
+func loadTestCases(t *testing.T, path string) []testCase {
+	dir, err := os.Open(path)
+	if err != nil {
+		t.Error(err)
+		t.Fatalf("failed to open samples directory: %s", path)
+	}
+	defer dir.Close()
+	fs, err := dir.Readdir(-1)
+	if err != nil {
+		t.Error(err)
+		t.Fatalf("failed to read samples directory: %s", path)
+	}
+	var dirs []os.FileInfo
+	for _, f := range fs {
+		if f.IsDir() {
+			dirs = append(dirs, f)
+		}
+	}
+	sort.Slice(dirs, func(i, j int) bool {
+		nameA := dirs[i].Name()
+		nameB := dirs[j].Name()
+		numA, _ := strconv.Atoi(nameA)
+		numB, _ := strconv.Atoi(nameB)
+		if numA > 0 {
+			if numB == 0 {
+				return true
+			}
+		} else if numB > 0 {
+			return false
+		}
+		return nameA < nameB
+	})
+	var tests []testCase
+	for _, d := range dirs {
+		index := d.Name()
+		inFile := filepath.Join(path, index, "input.txt")
+		in, err := os.ReadFile(inFile)
+		if err != nil {
+			t.Fatalf("failed to read input: file=%s", inFile)
+		}
+		outFile := filepath.Join(path, index, "output.txt")
+		out, err := os.ReadFile(outFile)
+		if err != nil {
+			t.Fatalf("failed to read output: file=%s", outFile)
+		}
+		tests = append(tests, testCase{
+			name:   fmt.Sprintf("sample-%s", index),
+			index:  index,
+			input:  string(in),
+			output: string(out),
+		})
+	}
+	return tests
 }

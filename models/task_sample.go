@@ -10,7 +10,7 @@ const (
 type TaskSample struct {
 	ID     string         `gorm:"primaryKey"`
 	TaskID string         `gorm:"not null"`
-	Index  int            `gorm:"not null"`
+	Index  string         `gorm:"not null"`
 	Input  string         `gorm:"not null"`
 	Output string         `gorm:"not null"`
 	Type   TaskSampleType `gorm:"not null"`
