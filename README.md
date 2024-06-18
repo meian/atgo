@@ -4,6 +4,14 @@
 
 - [日本語](./README-ja.md)
 
+## Conformance to rules for generated AI
+
+[AtCoder生成AI対策ルール - 20240607版](https://info.atcoder.jp/entry/llm-abc-rules-ja)  
+(mearning of `AtCoder AI Policy`)
+
+AtCoder has established the rules described in the above document to restrict the use of generated AI in the ABC.  
+`atgo` has been modified to conform to these rules in v0.0.4, so please use v0.0.4 or later to participate in ABC.
+
 ## Installation
 
 `atgo` is installed with the following command.
