@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -99,11 +98,9 @@ func (c *TaskCrawler) parseSamples(ctx context.Context, doc *goquery.Document) (
 		return nil, err
 	}
 
-	cp := regexp.MustCompile(`^\s*入力例\s*\d+$`)
-
 	// Sample Input の数 = sampleの数
 	count := doc.Find("h3").FilterFunction(func(i int, s *goquery.Selection) bool {
-		return cp.MatchString(s.Text())
+		return strings.HasPrefix(s.Text(), "入力例")
 	}).Length()
 	logger := logs.FromContext(ctx).With("sample count", count)
 
