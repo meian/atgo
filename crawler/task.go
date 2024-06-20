@@ -100,7 +100,7 @@ func (c *TaskCrawler) parseSamples(ctx context.Context, doc *goquery.Document) (
 
 	// Sample Input の数 = sampleの数
 	count := doc.Find("h3").FilterFunction(func(i int, s *goquery.Selection) bool {
-		return strings.HasPrefix(s.Text(), "入力例 ")
+		return strings.HasPrefix(s.Text(), "入力例")
 	}).Length()
 	logger := logs.FromContext(ctx).With("sample count", count)
 
@@ -108,18 +108,18 @@ func (c *TaskCrawler) parseSamples(ctx context.Context, doc *goquery.Document) (
 	for i := 0; i < count; i++ {
 		logger := logger.With("index", i)
 		// 中に 入力例 N がある<div class="part">の中の<pre>を取得
-		inTitle := fmt.Sprintf("入力例 %d", i+1)
+		inTitle := fmt.Sprintf("入力例%d", i+1)
 		input := stmt.Find("div.part").FilterFunction(func(i int, s *goquery.Selection) bool {
-			return s.Find("h3").Text() == inTitle
+			return strings.ReplaceAll(s.Find("h3").Text(), " ", "") == inTitle
 		}).Find("pre").First()
 		if input.Length() == 0 {
 			logger.Error("not found input")
 			return nil, errors.New("failed to find input")
 		}
 		// 中に 出力例 N がある<div class="part">の中の<pre>を取得
-		outTitle := fmt.Sprintf("出力例 %d", i+1)
+		outTitle := fmt.Sprintf("出力例%d", i+1)
 		output := stmt.Find("div.part").FilterFunction(func(i int, s *goquery.Selection) bool {
-			return s.Find("h3").Text() == outTitle
+			return strings.ReplaceAll(s.Find("h3").Text(), " ", "") == outTitle
 		}).Find("pre").First()
 		if output.Length() == 0 {
 			logger.Error("not found output")
