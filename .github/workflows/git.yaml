@@ -1,0 +1,23 @@
+name: Git Checks
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, synchronize]
+
+jobs:
+  block-fixup-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Block Fixup Commit Merge
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          if [ -z "$base" ]; then
+            base=$(git ls-remote 2>/dev/null | grep refs/heads/main | cut -f1)
+          fi
+          git fetch --no-tags --depth=1 origin "$base:_pr_base"
+          git fetch --no-tags --depth=100 origin "${{ github.sha }}:_pr_ref"
+          commits=$(git log --pretty='%s - %ad - %h' --date=format:'%Y-%m-%d %H:%M:%S' _pr_base.._pr_ref)
+          echo "$commits"
+          echo "$commits" | grep -q '^fixup!' && echo 'Fixup commits are not allowed' && exit 1 || echo 'No fixup commits found'
