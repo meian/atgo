@@ -10,6 +10,8 @@ import (
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
 	"github.com/meian/atgo/repo"
+	"github.com/meian/atgo/usecase/common"
+	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
 )
 
@@ -26,13 +28,21 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 	logger := logs.FromContext(ctx)
 	repo := repo.NewContest(database.FromContext(ctx))
 
-	contest, err := repo.Find(ctx, param.ContestID)
+	info, mustSave, err := common.ResolveTaskInfo(ctx, param.ContestID, "")
+	if err != nil {
+		logger.Error(err.Error())
+		return nil, errors.New("no specified contest ID")
+	}
+	logger = logger.With("contestID", info.ContestID)
+	ctx = logs.ContextWith(ctx, logger)
+
+	contest, err := repo.Find(ctx, info.ContestID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest")
 	}
 	if contest == nil {
-		contest, err = u.createContest(ctx, param.ContestID)
+		contest, err = u.createContest(ctx, info.ContestID)
 		if err != nil {
 			return nil, err
 		}
@@ -44,10 +54,26 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 		}
 	}
 
-	contest, err = repo.FindWithTasks(ctx, param.ContestID)
+	contest, err = repo.FindWithTasks(ctx, info.ContestID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest with tasks")
+	}
+
+	if param.ContestID != info.ContestID {
+		taskFile, _ := workspace.TaskInfoFile()
+		if err := info.WriteFile(taskFile); err != nil {
+			logger.Error(err.Error())
+			return nil, errors.New("failed to write task info file")
+		}
+	}
+
+	if mustSave {
+		taskFile, _ := workspace.TaskInfoFile()
+		if err := info.WriteFile(taskFile); err != nil {
+			logger.Error(err.Error())
+			return nil, errors.New("failed to write task info file")
+		}
 	}
 
 	return &ContestResult{

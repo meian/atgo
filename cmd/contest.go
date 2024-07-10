@@ -18,12 +18,13 @@ var contestCmd = &cobra.Command{
 	Short: "Display contest info",
 	Long:  `Display contest and associated tasks.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if len(args) == 0 {
-			return errors.New("contest ID is required")
+		ctx := cmd.Context()
+		var contestID string
+		if len(args) > 0 {
+			contestID = args[0]
 		}
-		contestID := args[0]
-		logger := logs.FromContext(cmd.Context()).With("contestID", contestID)
-		ctx := logs.ContextWith(cmd.Context(), logger)
+		logger := logs.FromContext(ctx).With("contestID", contestID)
+		ctx = logs.ContextWith(ctx, logger)
 
 		p := usecase.ContestParam{
 			ContestID: contestID,
