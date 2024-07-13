@@ -81,7 +81,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		return nil, errors.New("failed to find contest task")
 	}
 	if ct == nil {
-		return nil, errors.New("not related contest anc task")
+		return nil, errors.New("not related contest and task")
 	}
 	if param.ShowSamples {
 		task, err = trepo.FindWithSamples(ctx, info.TaskID)
