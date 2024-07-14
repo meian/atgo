@@ -29,7 +29,7 @@ func (c *Submit) Do(ctx context.Context, req *requests.Submit) (*responses.Submi
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		logger.With("status_code", resp.StatusCode).Error("unexpected status code")
+		logger.With("statusCode", resp.StatusCode).Error("unexpected status code")
 		return nil, errors.New("unexpected status code for submit")
 	}
 	// TODO: URLが違う場合にログを出す

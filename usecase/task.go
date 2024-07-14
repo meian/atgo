@@ -11,6 +11,7 @@ import (
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
 	"github.com/meian/atgo/repo"
+	"github.com/meian/atgo/usecase/common"
 	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
 	"gopkg.in/guregu/null.v3"
@@ -31,18 +32,17 @@ type TaskResult struct {
 }
 
 func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
-	logger := logs.FromContext(ctx)
+	info, mustSave, err := u.resolveTaskInfo(ctx, param)
+	if err != nil {
+		return nil, err
+	}
+	logger := logs.FromContext(ctx).With("contestID", info.ContestID).With("taskID", info.TaskID)
+	ctx = logs.ContextWith(ctx, logger)
+
 	dbConn := database.NewDBConn(database.FromContext(ctx))
 	crepo := repo.NewContestWithDBConn(dbConn)
 	ctrepo := repo.NewContestTaskWithDBConn(dbConn)
 	trepo := repo.NewTaskWithDBConn(dbConn)
-
-	info, err := u.resolveTaskInfo(ctx, param)
-	if err != nil {
-		return nil, err
-	}
-	logger = logger.With("contestID", info.ContestID).With("taskID", info.TaskID)
-	ctx = logs.ContextWith(ctx, logger)
 
 	task, err := trepo.Find(ctx, info.TaskID)
 	if err != nil {
@@ -81,7 +81,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		return nil, errors.New("failed to find contest task")
 	}
 	if ct == nil {
-		return nil, errors.New("not related contest anc task")
+		return nil, errors.New("the specified contest and task are not related")
 	}
 	if param.ShowSamples {
 		task, err = trepo.FindWithSamples(ctx, info.TaskID)
@@ -93,10 +93,12 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		return nil, errors.New("failed to find task with samples")
 	}
 
-	taskFile, _ := workspace.TaskInfoFile()
-	if err := info.WriteFile(taskFile); err != nil {
-		logger.Error(err.Error())
-		return nil, errors.New("failed to write task info file")
+	if mustSave {
+		taskFile, _ := workspace.TaskInfoFile()
+		if err := info.WriteFile(taskFile); err != nil {
+			logger.Error(err.Error())
+			return nil, errors.New("failed to write task info file")
+		}
 	}
 
 	return &TaskResult{
@@ -107,51 +109,20 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 
 }
 
-func (u Task) resolveTaskInfo(ctx context.Context, param TaskParam) (*models.TaskInfo, error) {
-	logger := logs.FromContext(ctx)
-	if len(param.TaskID) > 0 {
-		logger = logger.With("taskID", param.TaskID)
-		if len(param.ContestID) == 0 {
-			contestID, err := models.DetectContestID(param.TaskID)
-			if err != nil {
-				logger.Error(err.Error())
-				return nil, errors.New("failed to detect contest ID from task ID")
-			}
-			param.ContestID = contestID
-		}
-		return &models.TaskInfo{
-			TaskID:    param.TaskID,
-			ContestID: param.ContestID,
-		}, nil
+func (u Task) resolveTaskInfo(ctx context.Context, param TaskParam) (*models.TaskInfo, bool, error) {
+	if len(param.TaskID) == 0 && len(param.ContestID) > 0 {
+		return nil, false, errors.New("task ID is required when contest ID is specified")
 	}
-
-	info, err := u.readTaskInfo(ctx)
+	logger := logs.FromContext(ctx).With("contestID", param.ContestID).With("taskID", param.TaskID)
+	info, mustSave, err := common.ResolveTaskInfo(ctx, param.ContestID, param.TaskID)
 	if err != nil {
-		return nil, err
+		logger.Error(err.Error())
+		return nil, false, errors.New("task ID cannot be determined")
 	}
 	if len(info.TaskID) == 0 {
-		return nil, errors.New("not set task ID in task info file")
+		return nil, false, errors.New("task ID cannot be determined")
 	}
-	if len(info.ContestID) == 0 {
-		return nil, errors.New("not set contest ID in task info file")
-	}
-	return info, nil
-}
-
-func (u Task) readTaskInfo(ctx context.Context) (*models.TaskInfo, error) {
-	logger := logs.FromContext(ctx)
-	file, ok := workspace.TaskInfoFile()
-	logger = logger.With("info file", file)
-	if !ok {
-		logger.Error("not found task info file")
-		return nil, errors.New("not found task info file")
-	}
-	var info models.TaskInfo
-	if err := info.ReadFile(file); err != nil {
-		logger.Error(err.Error())
-		return nil, errors.New("failed to read task info file")
-	}
-	return &info, nil
+	return info, mustSave, nil
 }
 
 func (u Task) createTask(ctx context.Context, contestID string, taskID string) (*models.Task, error) {
