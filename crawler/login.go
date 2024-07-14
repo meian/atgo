@@ -47,7 +47,7 @@ func (c *Login) Do(ctx context.Context, req *requests.Login) (*responses.Login, 
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != gohttp.StatusOK {
-		logger.With("status_code", resp.StatusCode).Error("unexpected status code")
+		logger.With("statusCode", resp.StatusCode).Error("unexpected status code")
 		return nil, errors.New("unexpected status code for login")
 	}
 	doc, err := c.crawler.documentFromReader(ctx, resp.Body)
