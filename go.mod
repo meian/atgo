@@ -14,7 +14,7 @@ require (
 	github.com/spf13/viper v1.18.2
 	gopkg.in/guregu/null.v3 v3.5.0
 	gopkg.in/yaml.v3 v3.0.1
-	gorm.io/gorm v1.25.9
+	gorm.io/gorm v1.25.11
 )
 
 require (
