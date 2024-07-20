@@ -9,20 +9,17 @@ import (
 )
 
 var (
-	key = "fedcba9876543210"
-	iv  = []byte(key)
+	key = []byte("fedcba9876543210")
+	iv  = key
 )
 
-func encrypt(data string) (string, error) {
+func encrypt(data string) string {
 	d := []byte(data)
-	block, err := aes.NewCipher([]byte(key))
-	if err != nil {
-		return "", errors.Wrap(err, "failed to create new cipher")
-	}
+	block, _ := aes.NewCipher(key)
 	cipherText := make([]byte, len(d))
 	cfb := cipher.NewCFBEncrypter(block, iv)
 	cfb.XORKeyStream(cipherText, d)
-	return base64.StdEncoding.EncodeToString(cipherText), nil
+	return base64.StdEncoding.EncodeToString(cipherText)
 }
 
 func decrypt(encryptedBase64 string) (string, error) {
@@ -30,10 +27,7 @@ func decrypt(encryptedBase64 string) (string, error) {
 	if err != nil {
 		return "", errors.Wrap(err, "failed to decode base64")
 	}
-	block, err := aes.NewCipher([]byte(key))
-	if err != nil {
-		return "", errors.Wrap(err, "failed to create new cipher")
-	}
+	block, _ := aes.NewCipher(key)
 	plainText := make([]byte, len(cipherText))
 	cfb := cipher.NewCFBDecrypter(block, iv)
 	cfb.XORKeyStream(plainText, cipherText)
