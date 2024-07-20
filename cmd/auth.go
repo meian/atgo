@@ -56,7 +56,7 @@ var authCmd = &cobra.Command{
 			return err
 		}
 		file := workspace.CredentialFile()
-		if err := auth.Store(ctx, file, user, password); err != nil {
+		if err := auth.Write(ctx, file, user, password); err != nil {
 			return err
 		}
 		cmd.Printf("Credential is stored: %s\n", file)

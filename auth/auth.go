@@ -44,7 +44,7 @@ func Read(ctx context.Context, file string) (string, string, error) {
 	return username, password, nil
 }
 
-func Store(ctx context.Context, file, user, password string) error {
+func Write(ctx context.Context, file, user, password string) error {
 	logger := logs.FromContext(ctx).With("file", file)
 	fw, err := os.Create(file)
 	if err != nil {
