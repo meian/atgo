@@ -3,6 +3,7 @@ package auth
 import (
 	"bufio"
 	"context"
+	"fmt"
 	"os"
 	"strings"
 
@@ -17,25 +18,17 @@ func Read(ctx context.Context, file string) (string, string, error) {
 		logger.Error("No store credential")
 		return "", "", errors.New("No store credential")
 	}
-	fr, err := os.Open(file)
+	cr, err := os.ReadFile(file)
 	if err != nil {
 		logger.Error(err.Error())
 		return "", "", errors.New("failed to open credential")
 	}
-	defer fr.Close()
-	br := bufio.NewReader(fr)
-	username, err := br.ReadString('\n')
-	if err != nil {
-		logger.Error(err.Error())
-		return "", "", errors.New("failed to read username")
+	parts := strings.Split(string(cr), "\n")
+	if len(parts) < 2 {
+		return "", "", errors.New("invalid credential format")
 	}
-	username = strings.TrimSpace(username)
-	ep, err := br.ReadString('\n')
-	if err != nil {
-		logger.Error(err.Error())
-		return "", "", errors.New("failed to read password")
-	}
-	ep = strings.TrimSpace(ep)
+	username := parts[0]
+	ep := parts[1]
 	password, err := decrypt(ep)
 	if err != nil {
 		logger.Error(err.Error())
@@ -53,18 +46,11 @@ func Write(ctx context.Context, file, user, password string) error {
 	}
 	defer fw.Close()
 	bw := bufio.NewWriter(fw)
-	_, err = bw.WriteString(user + "\n")
-	if err != nil {
+	if _, err := fmt.Fprintln(bw, user); err != nil {
 		logger.Error(err.Error())
 		return errors.New("failed to write username")
 	}
-	ep, err := encrypt(password)
-	if err != nil {
-		logger.Error(err.Error())
-		return errors.New("failed to write password")
-	}
-	_, err = bw.WriteString(ep + "\n")
-	if err != nil {
+	if _, err := fmt.Fprintln(bw, encrypt(password)); err != nil {
 		logger.Error(err.Error())
 		return errors.New("failed to write password")
 	}
