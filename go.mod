@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.9.2
 	github.com/fatih/color v1.17.0
 	github.com/glebarez/sqlite v1.11.0
-	github.com/m-mizutani/clog v0.0.4
+	github.com/m-mizutani/clog v0.0.7
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mattn/go-runewidth v0.0.15
 	github.com/pkg/errors v0.9.1
@@ -29,7 +29,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/k0kubun/pp/v3 v3.2.0 // indirect
-	github.com/m-mizutani/goerr v0.1.8 // indirect
+	github.com/m-mizutani/goerr v0.1.11 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
