@@ -18,26 +18,18 @@ type Crawler struct {
 	Path       string
 	pathParams map[string]string
 	client     *http.Client
-	loadCookie bool
 }
 
 func NewCrawler(path string) *Crawler {
 	return &Crawler{
 		Path:       path,
 		pathParams: make(map[string]string),
-		loadCookie: true,
 	}
 }
 
 func (c *Crawler) WithClient(client *http.Client) *Crawler {
 	c = c.clone()
 	c.client = client
-	return c
-}
-
-func (c *Crawler) WithLoadCookie(loadCookie bool) *Crawler {
-	c = c.clone()
-	c.loadCookie = loadCookie
 	return c
 }
 
@@ -50,7 +42,6 @@ func (c *Crawler) clone() *Crawler {
 		Path:       c.Path,
 		pathParams: ppm,
 		client:     c.client,
-		loadCookie: c.loadCookie,
 	}
 }
 

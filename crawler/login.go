@@ -19,9 +19,7 @@ type Login struct {
 }
 
 func NewLogin(client *gohttp.Client) *Login {
-	crawler := NewCrawler(url.LoginPath).
-		WithClient(client).
-		WithLoadCookie(false)
+	crawler := NewCrawler(url.LoginPath).WithClient(client)
 	return &Login{crawler: crawler}
 }
 
