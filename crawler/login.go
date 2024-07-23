@@ -7,7 +7,6 @@ import (
 
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
-	"github.com/meian/atgo/csrf"
 	"github.com/meian/atgo/http"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/url"
@@ -53,7 +52,6 @@ func (c *Login) Do(ctx context.Context, req *requests.Login) (*responses.Login, 
 		return nil, err
 	}
 	return &responses.Login{
-		LoggedIn:  c.crawler.LoggedIn(ctx, doc),
-		CSRFToken: csrf.FromCookies(ctx, resp.Cookies()),
+		LoggedIn: c.crawler.LoggedIn(ctx, doc),
 	}, nil
 }
