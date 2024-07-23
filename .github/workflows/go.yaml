@@ -1,0 +1,40 @@
+name: Go
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+    types:
+      - 'opened'
+      - 'ready_for_review'
+      - 'synchronize'
+    paths:
+      - 'go.mod'
+      - 'go.sum'
+      - '**.go'
+      - '.github/workflows/go.yaml'
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'go.mod'
+      - 'go.sum'
+      - '**.go'
+      - '.github/workflows/go.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22.5'
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v -race ./...
