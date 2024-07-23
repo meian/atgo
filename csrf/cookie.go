@@ -28,9 +28,11 @@ func fromCookie(ctx context.Context, cookie *http.Cookie) string {
 	}
 	v := cookie.Value[tokenPos+len(header):]
 	endPos := strings.Index(v, "%00")
-	if endPos > 0 {
-		v = v[:endPos]
+	if endPos < 0 {
+		logger.Error("csrf token is not terminate with %00")
+		return ""
 	}
+	v = v[:endPos]
 	v, err := url.QueryUnescape(v)
 	if err != nil {
 		logger.Error(err.Error())
