@@ -48,6 +48,12 @@ func testHTMLMap(t *testing.T, target string) htmlMap {
 	return m
 }
 
+type requestWant struct {
+	path  string
+	query url.Values
+	body  url.Values
+}
+
 type mockRequestRoundTripper struct {
 	request *http.Request
 }

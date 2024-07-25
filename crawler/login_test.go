@@ -19,11 +19,7 @@ func TestLogin_Do_Request(t *testing.T) {
 		CSRFToken: "token",
 		Continue:  "ctn",
 	}
-	want := struct {
-		path  string
-		query url.Values
-		body  url.Values
-	}{
+	want := requestWant{
 		path:  "/login",
 		query: url.Values{"continue": {"ctn"}},
 		body:  url.Values{"username": {"user"}, "password": {"pass"}, "csrf_token": {"token"}},
