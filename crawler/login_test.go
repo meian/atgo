@@ -36,39 +36,34 @@ func TestLogin_Do_Request(t *testing.T) {
 }
 
 func TestLogin_Do_Response(t *testing.T) {
-	type res struct {
-		status   int
-		bodyFile string
-		timeout  bool
-	}
 	type want struct {
 		err      bool
 		loggedIn bool
 	}
 	tests := []struct {
-		name string
-		res  res
-		want want
+		name    string
+		httpRes mockHTTPResponse
+		want    want
 	}{
 		{
-			name: "success",
-			res:  res{status: http.StatusOK, bodyFile: "logged-in.html"},
-			want: want{loggedIn: true},
+			name:    "success",
+			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "logged-in.html"},
+			want:    want{loggedIn: true},
 		},
 		{
-			name: "forbidden",
-			res:  res{status: http.StatusForbidden},
-			want: want{err: true},
+			name:    "forbidden",
+			httpRes: mockHTTPResponse{status: http.StatusForbidden},
+			want:    want{err: true},
 		},
 		{
-			name: "no html",
-			res:  res{status: http.StatusOK, bodyFile: "no-html"},
-			want: want{err: false, loggedIn: false},
+			name:    "no html",
+			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "no-html"},
+			want:    want{err: false, loggedIn: false},
 		},
 		{
-			name: "timeout",
-			res:  res{timeout: true},
-			want: want{err: true},
+			name:    "timeout",
+			httpRes: mockHTTPResponse{timeout: true},
+			want:    want{err: true},
 		},
 	}
 	m := testHTMLMap(t, "login")
@@ -77,7 +72,7 @@ func TestLogin_Do_Response(t *testing.T) {
 			assert := assert.New(t)
 			ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 			defer cancel()
-			client := mockResponseClient(tt.res.status, m.Get(tt.res.bodyFile), tt.res.timeout)
+			client := mockResponseClient(tt.httpRes.status, m.Get(tt.httpRes.bodyFile), tt.httpRes.timeout)
 			req := &requests.Login{Username: "user", Password: "pass"}
 			res, err := crawler.NewLogin(client).Do(ctx, req)
 			if tt.want.err {

@@ -90,6 +90,12 @@ func mockRequestClient() (*http.Client, captureFunc) {
 	return c, m.lastCaputure
 }
 
+type mockHTTPResponse struct {
+	status   int
+	bodyFile string
+	timeout  bool
+}
+
 type mockResponseRoundTripper struct {
 	status  int
 	body    string
