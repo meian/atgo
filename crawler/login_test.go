@@ -20,9 +20,11 @@ func TestLogin_Do_Request(t *testing.T) {
 		Continue:  "ctn",
 	}
 	want := struct {
+		path  string
 		query *url.Values
 		body  *url.Values
 	}{
+		path:  "/login",
 		query: &url.Values{"continue": {"ctn"}},
 		body:  &url.Values{"username": {"user"}, "password": {"pass"}, "csrf_token": {"token"}},
 	}
@@ -30,8 +32,9 @@ func TestLogin_Do_Request(t *testing.T) {
 	assert := assert.New(t)
 	client, cFunc := mockRequestClient()
 	_, _ = crawler.NewLogin(client).Do(context.Background(), req)
-	method, query, body := cFunc()
+	method, path, query, body := cFunc()
 	assert.Equal(http.MethodPost, method)
+	assert.Equal(want.path, path)
 	assert.Equal(want.query, query)
 	assert.Equal(want.body, body)
 }

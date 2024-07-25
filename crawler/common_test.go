@@ -60,10 +60,10 @@ func (m *mockRequestRoundTripper) RoundTrip(req *http.Request) (*http.Response, 
 	}, nil
 }
 
-type captureFunc func() (method string, query, body *url.Values)
+type captureFunc func() (method, path string, query, body *url.Values)
 
-func (m *mockRequestRoundTripper) lastCaputure() (string, *url.Values, *url.Values) {
-	q := m.request.URL.Query()
+func (m *mockRequestRoundTripper) lastCaputure() (string, string, *url.Values, *url.Values) {
+	query := m.request.URL.Query()
 	var body *url.Values
 	if m.request.Body != nil {
 		b, _ := io.ReadAll(m.request.Body)
@@ -73,7 +73,7 @@ func (m *mockRequestRoundTripper) lastCaputure() (string, *url.Values, *url.Valu
 			panic(errors.Wrapf(err, "cannot parse request body: %s", string(b)))
 		}
 	}
-	return m.request.Method, &q, body
+	return m.request.Method, m.request.URL.Path, &query, body
 }
 
 func mockRequestClient() (*http.Client, captureFunc) {
