@@ -3,13 +3,12 @@
 
 
 
-
 <!DOCTYPE html>
 <html>
 <head>
-	<title>AtCoder：競技プログラミングコンテストを開催する国内最大のサイト</title>
+	<title>AtCoder</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta http-equiv="Content-Language" content="ja">
+	<meta http-equiv="Content-Language" content="en">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<meta name="format-detection" content="telephone=no">
 	<meta name="google-site-verification" content="google-site-verification" />
@@ -25,20 +24,20 @@
 	</script>
 
 
-	<meta name="description" content="プログラミング初級者から上級者まで楽しめる、競技プログラミングコンテストサイト「AtCoder」。オンラインで毎週開催プログラミングコンテストを開催しています。競技プログラミングを用いて、客観的に自分のスキルを計ることのできるサービスです。">
+	<meta name="description" content="AtCoder is a programming contest site for anyone from beginners to experts. We hold weekly programming contests online.">
 	<meta name="author" content="AtCoder Inc.">
 
 	<meta property="og:site_name" content="AtCoder">
 
-	<meta property="og:title" content="AtCoder：競技プログラミングコンテストを開催する国内最大のサイト" />
-	<meta property="og:description" content="プログラミング初級者から上級者まで楽しめる、競技プログラミングコンテストサイト「AtCoder」。オンラインで毎週開催プログラミングコンテストを開催しています。競技プログラミングを用いて、客観的に自分のスキルを計ることのできるサービスです。" />
+	<meta property="og:title" content="AtCoder" />
+	<meta property="og:description" content="AtCoder is a programming contest site for anyone from beginners to experts. We hold weekly programming contests online." />
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://atcoder.jp/" />
+	<meta property="og:url" content="https://atcoder.jp/home" />
 	<meta property="og:image" content="https://img.atcoder.jp/assets/atcoder.png" />
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:site" content="@atcoder" />
 
-	<meta property="twitter:title" content="AtCoder：競技プログラミングコンテストを開催する国内最大のサイト" />
+	<meta property="twitter:title" content="AtCoder" />
 
 	<link href="//fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" type="text/css" href="//img.atcoder.jp/public/some-hash/css/bootstrap.min.css">
@@ -51,7 +50,7 @@
 	<script src="//img.atcoder.jp/public/some-hash/js/cdn/moment.min.js"></script>
 	<script src="//img.atcoder.jp/public/some-hash/js/cdn/moment_js-ja.js"></script>
 	<script>
-		var LANG = "ja";
+		var LANG = "en";
 		var userScreenName = "kitamin";
 		var csrfToken = "test-csrf-token";
 	</script>
@@ -86,7 +85,7 @@
 
 		<script src="//img.atcoder.jp/public/some-hash/js/lib/marked.js"></script>
 		<script src="//img.atcoder.jp/public/some-hash/js/cdn/jquery.timeago.min.js"></script>
-		<script src="//img.atcoder.jp/public/some-hash/js/lib/jquery.timeago.ja.js"></script>
+
 		<script src="//img.atcoder.jp/public/some-hash/js/blog.js"></script>
 
 
@@ -95,8 +94,6 @@
 
 
 
-
-		<link rel="stylesheet" href="//img.atcoder.jp/public/some-hash/css/top/common.css">
 
 	<script src="//img.atcoder.jp/public/some-hash/js/base.js"></script>
 </head>
@@ -114,391 +111,224 @@
 <div id="main-div" class="float-container">
 
 
-
-	<header id="header">
-		<div class="header-inner">
-			<div class="header-bar">
-				<a href="/" class="header-logo"><img src="//img.atcoder.jp/assets/top/img/logo_bk.svg" alt="AtCoder"></a>
-				<div class="header-icon">
-					<a class="header-menubtn menu3 j-menu">
-						<div class="header-menubtn_inner">
-							<span class="top"></span>
-							<span class="middle"></span>
-							<span class="bottom"></span>
-						</div>
-					</a>
-				</div>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+					<span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/"></a>
 			</div>
-			<nav class="header-nav j-menu_gnav">
-				<ul class="header-page">
-					<li class="is-active"><a href="/">AtCoder.jp</a></li>
-					<li><a href="/home">コンテスト</a></li>
-					<li><a href="//jobs.atcoder.jp/" target="_blank" rel="noopener">Jobs</a></li>
-					<li><a href="//past.atcoder.jp" target="_blank" rel="noopener">検定</a></li>
-					<li><a href="//career.atcoder.jp" target="_blank" rel="noopener">CareerDesign</a></li>
-					<li><a href="//info.atcoder.jp" target="_blank" rel="noopener">AtCoderInfo</a></li>
+			<div class="collapse navbar-collapse" id="navbar-collapse">
+				<ul class="nav navbar-nav">
+
+					<li><a href="/home">Home</a></li>
+					<li><a href="/contests/">Contest</a></li>
+					<li><a href="/ranking">Ranking</a></li>
+
 				</ul>
-				<div class="header-control">
-					<ul class="header-lang">
-						<li class="is-active"><a href="/?lang=ja">JP</a></li>
-						<li><a href="/?lang=en">EN</a></li>
-					</ul>
+				<ul class="nav navbar-nav navbar-right">
 
-				</div>
-			</nav>
-
-				<div class="header-mypage">
-					<div class="j-dropdown_mypage">
-						<div class="header-mypage_btn">
-							<span class="inner">
-								<span class="user-gray bold">kitamin</span>
-							</span>
-						</div>
-						<div class="header-mypage_detail" style="display: none;">
-							<div class="inner">
-								<ul class="header-mypage_list">
-									<li class="large"><a href="/users/kitamin"><i class="a-icon a-icon-user"></i> マイプロフィール</a></li>
-									<li><a href="/settings"><i class="a-icon a-icon-setting"></i> 基本設定</a></li>
-									<li><a href="/settings/icon"><i class="a-icon a-icon-image"></i> アイコン設定</a></li>
-									<li><a href="/settings/password"><i class="a-icon a-icon-key"></i> パスワードの変更</a></li>
-									<li><a href="/settings/fav"><i class="a-icon a-icon-star"></i> お気に入り管理</a></li>
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+							<img src='//img.atcoder.jp/assets/top/img/flag-lang/en.png'> English <span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="/home?lang=ja"><img src='//img.atcoder.jp/assets/top/img/flag-lang/ja.png'> 日本語</a></li>
+							<li><a href="/home?lang=en"><img src='//img.atcoder.jp/assets/top/img/flag-lang/en.png'> English</a></li>
+						</ul>
+					</li>
 
 
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+								<span class="glyphicon glyphicon-cog" aria-hidden="true"></span> kitamin <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="/users/kitamin"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> My Profile</a></li>
+								<li class="divider"></li>
+								<li><a href="/settings"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> General Settings</a></li>
+								<li><a href="/settings/icon"><span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Change Photo</a></li>
+								<li><a href="/settings/password"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Change Password</a></li>
+								<li><a href="/settings/fav"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Manage Fav</a></li>
 
 
 
-									<li class="large"><a href="javascript:void(form_logout.submit())"><i class="a-icon a-icon-logout"></i> ログアウト</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
+								<li class="divider"></li>
+								<li><a href="javascript:void(form_logout.submit())"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Sign Out</a></li>
+							</ul>
+						</li>
 
+				</ul>
+			</div>
 		</div>
+	</nav>
 
-	</header>
-
-	<form method="POST" name="form_logout" action="/logout?continue=https%3A%2F%2Fatcoder.jp%2F">
+	<form method="POST" name="form_logout" action="/logout?continue=https%3A%2F%2Fatcoder.jp%2Fhome">
 		<input type="hidden" name="csrf_token" value="test-csrf-token" />
 	</form>
-	<div id="main-container" class="container is-type_new is-new_header"
+	<div id="main-container" class="container"
 		 	style="">
 
-	<div class="row" style="margin: 0 10px;">
 
 
-			<div class="alert alert-success alert-dismissible col-sm-12 fade in" role="alert" style="margin: 10px 0;">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> ようこそ、kitamin さん。
+<br>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="panel panel-primary">
+	<div class="panel-heading collapse-heading" data-toggle="collapse" data-target="#collapse-contest">
+		<h3 class="panel-title">
+			Contest
+			<span class="glyphicon pull-right"></span>
+		</h3>
+	</div>
+	<div id="collapse-contest" class="panel-body panel-collapse collapse in">
+
+
+
+			<div id="contest-table-permanent">
+				<h4>Permanent Contests</h4>
+
+
+				<div class="table-responsive">
+	<table class="table table-default table-striped table-hover table-condensed small" style="margin-bottom:0;">
+		<thead>
+		<tr>
+
+			<th>Contest Name</th>
+		</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
 			</div>
 
-	</div>
+
+			<hr>
+			<div id="contest-table-upcoming">
+				<h4>Upcoming Contests</h4>
 
 
+				<div class="table-responsive">
+	<table class="table table-default table-striped table-hover table-condensed small" style="margin-bottom:0;">
+		<thead>
+		<tr>
+			<th width="36%">Start Time</th>
+			<th>Contest Name</th>
+		</tr>
+		</thead>
+		<tbody>
 
-<section id="keyvisual">
-	<div class="keyvisual-inner">
-		<div class="keyvisual-grid">
-			<div class="keyvisual-logo"><img src="//img.atcoder.jp/assets/top/img/logo_wh.svg" alt="AtCoder"></div>
-			<h1 class="keyvisual-copy">解けた！を<br class="sp">世界に届けたい。</h1>
-			<div class="keyvisual-txt">AtCoderは、世界最高峰の競技プログラミングサイトです。<br>リアルタイムのオンラインコンテストで競い合うことや、<br>5,000以上の過去問にいつでもチャレンジすることができます。</div>
-		</div>
-	</div>
-	<div class="keyvisual-btnarea">
-		<a href="https://info.atcoder.jp/overview/about/atcoder?utm_source=atcoder&utm_medium=button&utm_id=atcoder-top">AtCoderとは？</a>
-		<a href="https://info.atcoder.jp/overview/contest/intro?utm_source=atcoder&utm_medium=button&utm_id=atcoder-top">はじめかた</a>
-	</div>
-</section>
-
-<section class="t-section">
-	<div class="t-inner">
-		<div class="a-title_h1">
-			<h1 class="a-title_ttl"><i class="a-icon a-icon-contest"></i>コンテスト</h1>
-		</div>
-	</div>
-	<div class="f-flex f-flex_mg5 f-flex_mg0_s f-flex_mb5_s">
-		<div class="f-flex4 f-flex12_s">
-			<div class="m-box_inner">
-				<div class="a-title_h2">
-					<h2 class="a-title_ttl">最新コンテスト</h2>
-				</div>
-
-					<ul class="m-list_contest">
-
-					</ul>
-
-				<div class="a-btnarea left">
-					<a href="/contests/" class="a-btn_arrow">コンテスト一覧</a>
-
-				</div>
+		</tbody>
+	</table>
+</div>
 			</div>
-		</div>
 
 
-		<div class="f-flex4 f-flex12_s a-bg_wh">
-			<div class="m-box_inner">
-				<div class="a-title_h2">
-					<h2 class="a-title_ttl">ランキング</h2>
-				</div>
-				<div>
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#ranking-algo" data-toggle="tab">Algorithm</a></li>
-						<li><a href="#ranking-heuristic" data-toggle="tab">Heuristic</a></li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="ranking-algo">
-			<span class="pull-right">最終更新日時: <a href='http://www.timeanddate.com/worldclock/fixedtime.html?iso=20240724T0600&p1=248' target='blank'><time class='fixtime fixtime-full'>2024-07-24 06:00:00+0900</time></a></span>
-			<table class="table table-default table-striped table-hover table-condensed a-table_ranking">
+			<hr>
+			<div id="contest-table-recent">
+				<h4>Recent Contests</h4>
+
+
+				<div class="table-responsive">
+	<table class="table table-default table-striped table-hover table-condensed small" style="margin-bottom:0;">
+		<thead>
+		<tr>
+			<th width="36%">Start Time</th>
+			<th>Contest Name</th>
+		</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+			</div>
+
+		<br>
+		<p class="btn-text-group">
+			<a href='/contests/' class="btn-text">Detail</a>
+
+
+		</p>
+	</div>
+</div>
+		<div class="panel panel-primary">
+	<div class="panel-heading collapse-heading" data-toggle="collapse" data-target="#collapse-ranking-algo">
+		<h3 class="panel-title">
+			Ranking: Algorithm
+			<span class="glyphicon pull-right"></span>
+		</h3>
+	</div>
+	<div id="collapse-ranking-algo" class="panel-body panel-collapse collapse in">
+		<div class="table-responsive">
+			<p class="pull-right">Last Updated: <a href='http://www.timeanddate.com/worldclock/fixedtime.html?iso=20240725T0600&p1=248' target='blank'><time class='fixtime fixtime-full'>2024-07-25 06:00:00+0900</time></a></p>
+			<table class="table table-default table-striped table-hover table-condensed">
+				<thead>
+					<tr>
+						<th width="8%"></th>
+						<th>User</th>
+						<th width="20%">Rating</th>
+					</tr>
+				</thead>
 				<tbody>
 
 				</tbody>
 			</table>
-			<div class="a-btnarea left">
-				<a href="/ranking?contestType=algo" class="a-btn_arrow">すべて表示</a>
-
-				<a href="/hof" class="a-btn_arrow">殿堂入り</a>
-
-				<a href="https://img.atcoder.jp/file/gp30/race2024.html" class="a-btn_arrow">AWTF Race Ranking 2024</a>
-			</div>
 		</div>
-						<div class="tab-pane" id="ranking-heuristic">
-			<span class="pull-right">最終更新日時: <a href='http://www.timeanddate.com/worldclock/fixedtime.html?iso=20240724T0600&p1=248' target='blank'><time class='fixtime fixtime-full'>2024-07-24 06:00:00+0900</time></a></span>
-			<table class="table table-default table-striped table-hover table-condensed a-table_ranking">
+		<p class="btn-text-group">
+			<a href='/ranking?contestType=algo' class="btn-text">View all</a>
+			<span class="divider"></span>
+
+			<a href='/hof' class="btn-text">Hall of Fame</a>
+			<span class="divider"></span>
+
+			<a href='https://img.atcoder.jp/file/gp30/race2024.html' class="btn-text">GP30</a>
+		</p>
+	</div>
+</div>
+		<div class="panel panel-primary">
+	<div class="panel-heading collapse-heading" data-toggle="collapse" data-target="#collapse-ranking-heuristic">
+		<h3 class="panel-title">
+			Ranking: Heuristic
+			<span class="glyphicon pull-right"></span>
+		</h3>
+	</div>
+	<div id="collapse-ranking-heuristic" class="panel-body panel-collapse collapse in">
+		<div class="table-responsive">
+			<p class="pull-right">Last Updated: <a href='http://www.timeanddate.com/worldclock/fixedtime.html?iso=20240725T0600&p1=248' target='blank'><time class='fixtime fixtime-full'>2024-07-25 06:00:00+0900</time></a></p>
+			<table class="table table-default table-striped table-hover table-condensed">
+				<thead>
+					<tr>
+						<th width="8%"></th>
+						<th>User</th>
+						<th width="20%">Rating</th>
+					</tr>
+				</thead>
 				<tbody>
 
 				</tbody>
 			</table>
-			<div class="a-btnarea left">
-				<a href="/ranking?contestType=heuristic" class="a-btn_arrow">すべて表示</a>
-
-				<a href="https://img.atcoder.jp/file/gp30/race2024H.html" class="a-btn_arrow">AWTF Race Ranking 2024</a>
-			</div>
 		</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<p class="btn-text-group">
+			<a href='/ranking?contestType=heuristic' class="btn-text">View all</a>
+			<span class="divider"></span>
 
-		<div class="f-flex4 f-flex12_s a-bg_wh">
-			<div class="m-box_inner">
-				<div class="a-title_h2">
-					<h2 class="a-title_ttl">お知らせ</h2>
-				</div>
-				<div class="m-box-news">
-
-
-							<div class="m-box-news_ttl"><a href="/posts/1276">ALGO ARTIS プログラミングコンテスト2024 夏（AtCoder Heuristic Contest 035） 告知</a></div>
-							<div class="m-box-news_time">
-								<small>投稿日時:
-									<span class="tooltip-unix" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="1721395692">
-										<time class="timeago" datetime="2024/07/19 22:28:12"></time>
-									</span>
-								</small>
-							</div>
-							<div class="m-box-news_post">
-								<div class="panel-body blog-post">&lt;a href=&#34;https://atcoder.jp/contests/ahc035&#34;&gt;ALGO ARTIS プログラミングコンテスト2024 夏（AtCoder Heuristic Contest 035）&lt;/a&gt; が開催されます。
-
-- コンテストページ： https://atcoder.jp/contests/ahc035
-- 開始時刻： &lt;a href=&#39;http://www.timeanddate.com/worldclock/fixedtime.html?iso=20240721T1500&amp;p1=248&#39; target=&#39;blank&#39;&gt;&lt;time class=&#39;fixtime fixtime-full&#39;&gt;2024-07-21 15:00:00&#43;0900&lt;/time&gt;&lt;/a&gt;
-- コンテスト時間：  4 時間
-- Writer：&lt;img src=&#34;https://img.atcoder.jp/assets/icon/crown_gold.png&#34;&gt;&lt;a href=&#34;https://atcoder.jp/users/terry_u16?contestType=heuristic&#34; class=&#34;username&#34;&gt;&lt;span class=&#34;user-red&#34;&gt;terry_u16&lt;/span&gt;&lt;/a&gt;
-- レーティング変化：All(ヒューリスティックレーティング)
-
-このコンテストは &lt;a href=&#34;https://atcoder.jp/posts/1163&#34;&gt;AWTF 2025&lt;/a&gt; の選考対象です。
-
-皆様、是非ご参加ください！
-</div>
-								<div class="a-btnarea center">
-									<a href="/posts/1276" class="a-btn_bg small">詳細を見る</a>
-								</div>
-							</div>
-
-
-					<div class="a-btnarea left">
-						<a href="/home" class="a-btn_arrow">お知らせ一覧</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-
-<section class="t-section">
-	<div class="t-inner">
-		<div class="a-title_h1">
-			<h1 class="a-title_ttl"><i class="a-icon a-icon-job"></i>AtCoderJobs</h1>
-			<p class="a-title_txt">AtCoderのレーティングを用いた人材採用サービスです。</p>
-		</div>
-		<div class="m-list-job">
-			<div class="f-flex">
-
-					<div class="f-flex3">
-						<a href="//jobs.atcoder.jp/offers/1046" class="m-list-job_item">
-							<div class="m-list-job_ttl"><span class="inner">【リクルート データスペシャリスト職】就業型インターンシップ 2024</span></div>
-							<div class="m-list-job_notice">2024/06/04更新 | インターン</div>
-							<div class="m-list-job_inner">
-								<div class="m-list-job_img"><img src="https://jobs.img.atcoder.jp/company/recruit0/b327709639aa3ae6012646ac3296a56f.png" alt="株式会社リクルート"></div>
-								<div class="m-list-job_company">株式会社リクルート</div>
-								<div class="m-list-job_detail">
-									<ul>
-										<li>
-											<div class="title">要求ランク</div>
-											<div class="txt"><span class="jobsrank jobsrank-C">C</span> 以上</div>
-										</li>
-										<li>
-											<div class="title">給与</div>
-											<div class="txt">時給 3000円〜3000円</div>
-										</li>
-										<li>
-											<div class="title">勤務地</div>
-											<div class="txt">東京都 千代田区丸の内1-9-2 グラントウキョウサウスタワー 他（全て東京都内になります）</div>
-										</li>
-										<li>
-											<div class="title">待遇</div>
-											<div class="txt">インターン（約１ヶ月）</div>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</a>
-					</div>
-
-					<div class="f-flex3">
-						<a href="//jobs.atcoder.jp/offers/634" class="m-list-job_item">
-							<div class="m-list-job_ttl"><span class="inner">≪完全自社内／自社事業≫凄腕の技術者集団！X・LINEパートナー企業でレベルアップしたいエンジニア急募≪少数精鋭／Rust≫</span></div>
-							<div class="m-list-job_notice">2024/05/20更新 | 中途採用</div>
-							<div class="m-list-job_inner">
-								<div class="m-list-job_img"><img src="https://jobs.img.atcoder.jp/company/uniquevision/3874f6400479a7db6e4c881f981dcbfc.png" alt="ユニークビジョン株式会社"></div>
-								<div class="m-list-job_company">ユニークビジョン株式会社</div>
-								<div class="m-list-job_detail">
-									<ul>
-										<li>
-											<div class="title">要求ランク</div>
-											<div class="txt"><span class="jobsrank jobsrank-D">D</span> 以上</div>
-										</li>
-										<li>
-											<div class="title">給与</div>
-											<div class="txt">年収 360万円〜600万円</div>
-										</li>
-										<li>
-											<div class="title">勤務地</div>
-											<div class="txt">東京都 渋谷区千駄ヶ谷5丁目34-7 NX新宿ビル 2F</div>
-										</li>
-										<li>
-											<div class="title">待遇</div>
-											<div class="txt">正社員</div>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</a>
-					</div>
-
-					<div class="f-flex3">
-						<a href="//jobs.atcoder.jp/offers/1005" class="m-list-job_item">
-							<div class="m-list-job_ttl"><span class="inner">AtCoderのサービス開発・運用を開発するソフトウェアエンジニアを募集しています！</span></div>
-							<div class="m-list-job_notice">2024/04/01更新 | 中途採用</div>
-							<div class="m-list-job_inner">
-								<div class="m-list-job_img"><img src="https://jobs.img.atcoder.jp/company/atcoder/22e0e825aef7d8df994bb9f2b4e22996.png" alt="AtCoder株式会社"></div>
-								<div class="m-list-job_company">AtCoder株式会社</div>
-								<div class="m-list-job_detail">
-									<ul>
-										<li>
-											<div class="title">要求ランク</div>
-											<div class="txt"><span class="jobsrank jobsrank-E">E</span> 以上</div>
-										</li>
-										<li>
-											<div class="title">給与</div>
-											<div class="txt">年収 500万円〜1250万円</div>
-										</li>
-										<li>
-											<div class="title">勤務地</div>
-											<div class="txt">東京都 新宿区新宿4丁目1-23 新宿SKYビル7F</div>
-										</li>
-										<li>
-											<div class="title">待遇</div>
-											<div class="txt">正社員</div>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</a>
-					</div>
-
-					<div class="f-flex3">
-						<a href="//jobs.atcoder.jp/offers/996" class="m-list-job_item">
-							<div class="m-list-job_ttl"><span class="inner">アルゴリズムエンジニア（アクチュアリー向け採用ページ）</span></div>
-							<div class="m-list-job_notice">2024/03/21更新 | 中途採用</div>
-							<div class="m-list-job_inner">
-								<div class="m-list-job_img"><img src="https://jobs.img.atcoder.jp/company/algo-artis/dc5f6cb1172a544c23d4ea2fe45f0d74.jpg" alt="株式会社ALGO ARTIS"></div>
-								<div class="m-list-job_company">株式会社ALGO ARTIS</div>
-								<div class="m-list-job_detail">
-									<ul>
-										<li>
-											<div class="title">要求ランク</div>
-											<div class="txt"><span class="jobsrank jobsrank-B">B</span> 以上</div>
-										</li>
-										<li>
-											<div class="title">給与</div>
-											<div class="txt">年収 700万円〜1300万円</div>
-										</li>
-										<li>
-											<div class="title">勤務地</div>
-											<div class="txt">東京都 港区虎ノ門4-1-1 神谷町トラストタワー 23階</div>
-										</li>
-										<li>
-											<div class="title">待遇</div>
-											<div class="txt">正社員（雇用契約期間上限あり：60歳　試用期間あり：原則3ヶ月）</div>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</a>
-					</div>
-
-			</div>
-		</div>
-		<div class="a-btnarea center margin-l vertical-sp">
-			<a href="//jobs.atcoder.jp/" class="a-btn_bg">求人情報を見る</a>
-			<a href="//jobs.atcoder.jp/info/recruit" class="a-btn_bg">採用担当者の方へ</a>
-		</div>
-	</div>
-</section>
-
-
-<section class="t-section">
-	<div class="t-inner">
-	<div class="a-title_h1">
-		<h1 class="a-title_ttl"><i class="a-icon a-icon-kentei"></i>検定</h1>
-	</div>
-
-	<div class="f-flex">
-		<div class="f-flex12">
-			<div class="m-box_inner">
-				<div class="mb-4">
-					<img class="center-block" src="//img.atcoder.jp/assets/top/img/kentei/logo_kentei.svg" style="width: 80%; max-width: 600px;">
-				</div>
-				<div class="a-title_h1" style="padding-bottom: 10px;">
-					<h1 class="a-title_ttl text-center" style="line-height: 180%;">
-						アルゴリズム実技検定についてはこちらから！
-						<br>
-						<a href="/contests/archive?category=50&amp;keyword=&amp;ratedType=0" target="_blank">過去問公開中</a>
-					</h1>
-				</div>
-				<div class="a-btnarea center vertical-sp">
-					<a href="//past.atcoder.jp/" class="a-btn_bg" target="_blank">詳細ページ</a>
-					<a href="//past.atcoder.jp/login" class="a-btn_bg" target="_blank">マイページ</a>
-				</div>
-			</div>
-		</div>
+			<a href='https://img.atcoder.jp/file/gp30/race2024H.html' class="btn-text">GP30</a>
+		</p>
 	</div>
 </div>
+	</div>
+	<div class="col-sm-8">
 
-</section>
-
+		<p class="text-center"><a class="btn-text" href="/posts/">Post Archive</a></p>
+	</div>
+</div>
 
 <script>
+
 	var userAgent = window.navigator.userAgent.toLowerCase();
 	if (userAgent.toLowerCase().indexOf('msie') !== -1 || userAgent.toLowerCase().indexOf('trident') !== -1) {
 		var text = 'AtCoderはInternet Explorerに対応していません。EdgeやChromeやFirefoxなどの別のブラウザをお使いください。\n';
@@ -508,18 +338,13 @@
 </script>
 
 
-
-
-
 			<hr>
 
-
-
-<div class="a2a_kit a2a_kit_size_20 a2a_default_style pull-right" data-a2a-url="https://atcoder.jp/?lang=ja" data-a2a-title="AtCoder：競技プログラミングコンテストを開催する国内最大のサイト">
+<div class="a2a_kit a2a_kit_size_20 a2a_default_style pull-right" data-a2a-url="https://atcoder.jp/home" data-a2a-title="AtCoder">
 	<a class="a2a_button_facebook"></a>
 	<a class="a2a_button_twitter"></a>
 
-		<a class="a2a_button_hatena"></a>
+		<a class="a2a_button_telegram"></a>
 
 	<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
 </div>
@@ -531,114 +356,25 @@
 	<hr>
 </div>
 
-	<footer id="footer">
-		<div class="t-inner">
-			<nav class="footer-nav">
-				<div class="footer-logo">
-					<a href="/"><img src="//img.atcoder.jp/assets/top/img/logo_wh.svg" alt="AtCoder"></a>
-				</div>
-				<div class="f-flex f-flex_mg0_s footer-page">
-					<div class="f-flex4 f-flex12_s">
-						<dl class="j-dropdown_footer">
-							<dt class="footer-nav_btn"><a href="/home">コンテスト</a></dt>
-							<dd class="footer-nav_detail">
-								<div class="inner">
-									<ul>
-										<li><a href="/home">ホーム</a></li>
-										<li><a href="/contests/">コンテスト一覧</a></li>
-										<li><a href="/ranking">ランキング</a></li>
+	<div class="container" style="margin-bottom: 80px;">
+			<footer class="footer">
 
-										<li><a href="//atcoder.jp/posts/261">便利リンク集</a></li>
-									</ul>
-								</div>
-							</dd>
-						</dl>
-					</div>
-					<div class="f-flex4 f-flex12_s">
-						<dl class="j-dropdown_footer">
-							<dt class="footer-nav_btn"><a href="//jobs.atcoder.jp" target="_blank">AtCoderJobs</a></dt>
-							<dd class="footer-nav_detail">
-								<div class="inner">
-									<ul>
-										<li><a href="//jobs.atcoder.jp">AtCoderJobsトップ</a></li>
+			<ul>
+				<li><a href="/tos">Terms of service</a></li>
+				<li><a href="/privacy">Privacy Policy</a></li>
+				<li><a href="/personal">Information Protection Policy</a></li>
+				<li><a href="/company">Company</a></li>
+				<li><a href="/faq">FAQ</a></li>
+				<li><a href="/contact">Contact</a></li>
 
-											<li><a href="//jobs.atcoder.jp/offers/list?f.CategoryScreenName=2025grad">2025年新卒採用求人一覧</a></li>
-
-											<li><a href="//jobs.atcoder.jp/offers/list?f.CategoryScreenName=2026grad">2026年新卒採用求人一覧</a></li>
-
-											<li><a href="//jobs.atcoder.jp/offers/list?f.CategoryScreenName=jobchange">中途採用求人一覧</a></li>
-
-											<li><a href="//jobs.atcoder.jp/offers/list?f.CategoryScreenName=intern">インターン求人一覧</a></li>
-
-											<li><a href="//jobs.atcoder.jp/offers/list?f.CategoryScreenName=parttime">アルバイト求人一覧</a></li>
-
-											<li><a href="//jobs.atcoder.jp/offers/list?f.CategoryScreenName=others">その他求人一覧</a></li>
-
-											<li><a href="//jobs.atcoder.jp/offers/list?f.CategoryScreenName=atcoder_scouts">AtCoder社による職業紹介求人一覧</a></li>
-
-										<li><a href="//jobs.atcoder.jp/info/recruit">採用担当者の方へ</a></li>
-									</ul>
-								</div>
-							</dd>
-						</dl>
-					</div>
-					<div class="f-flex4 f-flex12_s">
-						<dl class="j-dropdown_footer">
-							<dt class="footer-nav_btn"><a href="//past.atcoder.jp" target="_blank">検定</a></dt>
-							<dd class="footer-nav_detail">
-								<div class="inner">
-									<ul>
-										<li><a href="//past.atcoder.jp">検定トップ</a></li>
-										<li><a href="//past.atcoder.jp/login">マイページ</a></li>
-									</ul>
-								</div>
-							</dd>
-						</dl>
-					</div>
-					<div class="f-flex4 f-flex12_s">
-					        <dl class="j-dropdown_footer">
-							<dt class="footer-nav_btn"><a href="//career.atcoder.jp">AtCoderCareerDesign</a></dt>
-							<dd class="footer-nav_detail">
-								<div class="inner">
-									<ul>
-										<li><a href="//career.atcoder.jp">キャリアデザイントップ</a></li>
-									</ul>
-								</div>
-							</dd>
-						</dl>
-					</div>
-					<div class="f-flex4 f-flex12_s">
-						<dl class="j-dropdown_footer">
-							<dt class="footer-nav_btn"><a href="javascript:void(0)">About</a></dt>
-							<dd class="footer-nav_detail">
-								<div class="inner">
-									<ul>
-										<li><a href="/company">企業情報</a></li>
-										<li><a href="/faq">よくある質問</a></li>
-										<li><a href="/contact">お問い合わせ</a></li>
-										<li><a href="/documents/request">資料請求</a></li>
-									</ul>
-								</div>
-							</dd>
-						</dl>
-					</div>
-				</div>
-			</nav>
-			<div class="footer-btm">
-				<div class="footer-copy">
-					Copyright Since 2012 (C) AtCoder Inc. All rights reserved.
-				</div>
-				<ul class="footer-link">
-					<li><a href="/tos">利用規約</a></li>
-					<li><a href="/privacy">プライバシーポリシー</a></li>
-					<li><a href="/personal">個人情報保護方針</a></li>
-				</ul>
+			</ul>
+			<div class="text-center">
+					<small id="copyright">Copyright Since 2012 &copy;<a href="http://atcoder.co.jp">AtCoder Inc.</a> All rights reserved.</small>
 			</div>
-		</div>
-	</footer>
-
-	<div id="scroll-page-top-new" style="display:none;"><div class="inner">Page top</div></div>
-	<script src="//img.atcoder.jp/public/some-hash/js/top/common.js"></script>
+			</footer>
+	</div>
+	<p id="fixed-server-timer" ></p>
+	<div id="scroll-page-top" style="display:none;"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Page Top</div>
 
 </body>
 </html>
