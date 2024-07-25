@@ -21,12 +21,12 @@ func TestLogin_Do_Request(t *testing.T) {
 	}
 	want := struct {
 		path  string
-		query *url.Values
-		body  *url.Values
+		query url.Values
+		body  url.Values
 	}{
 		path:  "/login",
-		query: &url.Values{"continue": {"ctn"}},
-		body:  &url.Values{"username": {"user"}, "password": {"pass"}, "csrf_token": {"token"}},
+		query: url.Values{"continue": {"ctn"}},
+		body:  url.Values{"username": {"user"}, "password": {"pass"}, "csrf_token": {"token"}},
 	}
 
 	assert := assert.New(t)
