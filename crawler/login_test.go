@@ -50,7 +50,7 @@ func TestLogin_Do_Response(t *testing.T) {
 	}{
 		{
 			name:    "success",
-			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "logged-in.html"},
+			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "success.html"},
 			want:    want{res: &responses.Login{LoggedIn: true}},
 		},
 		{
@@ -59,8 +59,8 @@ func TestLogin_Do_Response(t *testing.T) {
 			want:    want{err: true},
 		},
 		{
-			name:    "no html",
-			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "no-html"},
+			name:    "not a html response",
+			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "not-a-html"},
 			want:    want{err: false, res: &responses.Login{LoggedIn: false}},
 		},
 		{

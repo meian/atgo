@@ -17,8 +17,8 @@ import (
 type htmlMap map[string]string
 
 func (m htmlMap) Get(key string) string {
-	if key == "no-html" {
-		return "no html"
+	if key == "not-a-html" {
+		return "no a html"
 	}
 	return m[key]
 }
