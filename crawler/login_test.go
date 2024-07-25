@@ -9,6 +9,7 @@ import (
 
 	"github.com/meian/atgo/crawler"
 	"github.com/meian/atgo/crawler/requests"
+	"github.com/meian/atgo/crawler/responses"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,9 +37,11 @@ func TestLogin_Do_Request(t *testing.T) {
 }
 
 func TestLogin_Do_Response(t *testing.T) {
+	m := testHTMLMap(t, "login")
+
 	type want struct {
-		err      bool
-		loggedIn bool
+		err bool
+		res *responses.Login
 	}
 	tests := []struct {
 		name    string
@@ -48,7 +51,7 @@ func TestLogin_Do_Response(t *testing.T) {
 		{
 			name:    "success",
 			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "logged-in.html"},
-			want:    want{loggedIn: true},
+			want:    want{res: &responses.Login{LoggedIn: true}},
 		},
 		{
 			name:    "forbidden",
@@ -58,7 +61,7 @@ func TestLogin_Do_Response(t *testing.T) {
 		{
 			name:    "no html",
 			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "no-html"},
-			want:    want{err: false, loggedIn: false},
+			want:    want{err: false, res: &responses.Login{LoggedIn: false}},
 		},
 		{
 			name:    "timeout",
@@ -66,7 +69,7 @@ func TestLogin_Do_Response(t *testing.T) {
 			want:    want{err: true},
 		},
 	}
-	m := testHTMLMap(t, "login")
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert := assert.New(t)
@@ -85,7 +88,7 @@ func TestLogin_Do_Response(t *testing.T) {
 			if !assert.NotNil(res) {
 				return
 			}
-			assert.Equal(tt.want.loggedIn, res.LoggedIn)
+			assert.Equal(tt.want.res, res)
 		})
 	}
 }
