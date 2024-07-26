@@ -1,14 +1,15 @@
 package crawler
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"io"
 	"log/slog"
 	"net/http"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/meian/atgo/io"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/url"
 	"github.com/pkg/errors"
@@ -141,6 +142,15 @@ func (c Crawler) doHTTPRequest(ctx context.Context, method, contentType, url str
 func (c Crawler) documentFromReader(ctx context.Context, respBody io.Reader) (*goquery.Document, error) {
 	logger := logs.FromContext(ctx)
 	logger.Debug("parsing document from response")
+
+	respBody, err := io.WithReadAction(respBody, func(r io.Reader) error {
+		return c.validHTML(ctx, r)
+	})
+	if err != nil {
+		logger.Error(err.Error())
+		return nil, errors.New("response is not a valid HTML")
+	}
+
 	doc, err := goquery.NewDocumentFromReader(respBody)
 	if err != nil {
 		logger.Error(err.Error())
@@ -149,6 +159,38 @@ func (c Crawler) documentFromReader(ctx context.Context, respBody io.Reader) (*g
 	logger.Debug("parsed document from response")
 
 	return doc, nil
+}
+
+func (Crawler) validHTML(ctx context.Context, reader io.Reader) error {
+	logger := logs.FromContext(ctx)
+
+	tags := [][]byte{[]byte("<html"), []byte("<head"), []byte("<body")}
+	buf := make([]byte, 4096)
+	var content []byte
+
+	for {
+		n, err := reader.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				return errors.New("failed to find HTML tags")
+			}
+			logger.Error(err.Error())
+			return errors.New("failed to read response body")
+		}
+		content = append(content, buf[:n]...)
+
+		for {
+			pos := bytes.Index(content, tags[0])
+			if pos < 0 {
+				break
+			}
+			content = content[pos:]
+			tags = tags[1:]
+			if len(tags) == 0 {
+				return nil
+			}
+		}
+	}
 }
 
 func (c Crawler) LoggedIn(ctx context.Context, doc *goquery.Document) bool {

@@ -61,7 +61,7 @@ func TestLogin_Do_Response(t *testing.T) {
 		{
 			name:    "not a html response",
 			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "not-a-html"},
-			want:    want{err: false, res: &responses.Login{LoggedIn: false}},
+			want:    want{err: true},
 		},
 		{
 			name:    "timeout",
