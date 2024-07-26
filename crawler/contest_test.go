@@ -10,38 +10,36 @@ import (
 	"github.com/meian/atgo/crawler"
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
+	"github.com/meian/atgo/timezone"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLogin_Do_Request(t *testing.T) {
-	req := &requests.Login{
-		Username:  "user",
-		Password:  "pass",
-		CSRFToken: "token",
-		Continue:  "ctn",
+func TestContest_Do_Request(t *testing.T) {
+	req := &requests.Contest{
+		ContestID: "abc123",
 	}
 	want := requestWant{
-		path:  "/login",
-		query: url.Values{"continue": {"ctn"}},
-		body:  url.Values{"username": {"user"}, "password": {"pass"}, "csrf_token": {"token"}},
+		path:  "/contests/abc123",
+		query: url.Values{},
+		body:  url.Values{},
 	}
 
 	assert := assert.New(t)
 	client, cFunc := mockRequestClient()
-	_, _ = crawler.NewLogin(client).Do(context.Background(), req)
+	_, _ = crawler.NewContest(client).Do(context.Background(), req)
 	method, path, query, body := cFunc()
-	assert.Equal(http.MethodPost, method)
+	assert.Equal(http.MethodGet, method)
 	assert.Equal(want.path, path)
 	assert.Equal(want.query, query)
 	assert.Equal(want.body, body)
 }
 
-func TestLogin_Do_Response(t *testing.T) {
-	m := testHTMLMap(t, "login")
+func TestContest_Do_Response(t *testing.T) {
+	m := testHTMLMap(t, "contest")
 
 	type want struct {
 		err bool
-		res *responses.Login
+		res *responses.Contest
 	}
 	tests := []struct {
 		name    string
@@ -51,11 +49,19 @@ func TestLogin_Do_Response(t *testing.T) {
 		{
 			name:    "success",
 			httpRes: mockHTTPResponse{status: http.StatusOK, bodyFile: "success.html"},
-			want:    want{res: &responses.Login{LoggedIn: true}},
+			want: want{
+				res: &responses.Contest{
+					ID:         "abc234",
+					Title:      "AtCoder Beginner Contest 234",
+					StartAt:    time.Date(2022, 1, 8, 21, 0, 0, 0, timezone.Tokyo),
+					Duration:   1*time.Hour + 40*time.Minute,
+					TargetRate: " - 1999",
+				},
+			},
 		},
 		{
-			name:    "forbidden",
-			httpRes: mockHTTPResponse{status: http.StatusForbidden},
+			name:    "not found",
+			httpRes: mockHTTPResponse{status: http.StatusNotFound},
 			want:    want{err: true},
 		},
 		{
@@ -76,8 +82,8 @@ func TestLogin_Do_Response(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 			defer cancel()
 			client := mockResponseClient(tt.httpRes.status, m.Get(tt.httpRes.bodyFile), tt.httpRes.timeout)
-			req := &requests.Login{Username: "user", Password: "pass"}
-			res, err := crawler.NewLogin(client).Do(ctx, req)
+			req := &requests.Contest{ContestID: "abc234"}
+			res, err := crawler.NewContest(client).Do(ctx, req)
 			if tt.want.err {
 				if assert.Error(err) {
 					t.Logf("error: %v", err)

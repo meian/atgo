@@ -17,8 +17,8 @@ import (
 type htmlMap map[string]string
 
 func (m htmlMap) Get(key string) string {
-	if key == "no-html" {
-		return "no html"
+	if key == "not-a-html" {
+		return "no a html"
 	}
 	return m[key]
 }
@@ -48,6 +48,12 @@ func testHTMLMap(t *testing.T, target string) htmlMap {
 	return m
 }
 
+type requestWant struct {
+	path  string
+	query url.Values
+	body  url.Values
+}
+
 type mockRequestRoundTripper struct {
 	request *http.Request
 }
@@ -60,20 +66,20 @@ func (m *mockRequestRoundTripper) RoundTrip(req *http.Request) (*http.Response, 
 	}, nil
 }
 
-type captureFunc func() (method string, query, body *url.Values)
+type captureFunc func() (method, path string, query, body url.Values)
 
-func (m *mockRequestRoundTripper) lastCaputure() (string, *url.Values, *url.Values) {
-	q := m.request.URL.Query()
-	var body *url.Values
+func (m *mockRequestRoundTripper) lastCaputure() (string, string, url.Values, url.Values) {
+	query := m.request.URL.Query()
+	body := url.Values{}
 	if m.request.Body != nil {
 		b, _ := io.ReadAll(m.request.Body)
 		if bt, err := url.ParseQuery(string(b)); err == nil {
-			body = &bt
+			body = bt
 		} else {
 			panic(errors.Wrapf(err, "cannot parse request body: %s", string(b)))
 		}
 	}
-	return m.request.Method, &q, body
+	return m.request.Method, m.request.URL.Path, query, body
 }
 
 func mockRequestClient() (*http.Client, captureFunc) {
@@ -82,6 +88,12 @@ func mockRequestClient() (*http.Client, captureFunc) {
 		Transport: m,
 	}
 	return c, m.lastCaputure
+}
+
+type mockHTTPResponse struct {
+	status   int
+	bodyFile string
+	timeout  bool
 }
 
 type mockResponseRoundTripper struct {

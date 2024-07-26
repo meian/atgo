@@ -11,6 +11,7 @@ import (
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/timezone"
 	"github.com/meian/atgo/url"
 	"github.com/pkg/errors"
 )
@@ -86,11 +87,11 @@ func (c *Contest) parseTimes(ctx context.Context, doc *goquery.Document) (time.T
 		With("startAt", tt.Eq(0).Text()).
 		With("endAt", tt.Eq(1).Text()).
 		Debug("find result")
-	startAt, err := time.ParseInLocation("2006-01-02 15:04:05-0700", tt.Eq(0).Text(), time.Local)
+	startAt, err := time.ParseInLocation("2006-01-02 15:04:05-0700", tt.Eq(0).Text(), timezone.Tokyo)
 	if err != nil {
 		return time.Time{}, 0, errors.New("failed to parse start time")
 	}
-	endAt, err := time.ParseInLocation("2006-01-02 15:04:05-0700", tt.Eq(1).Text(), time.Local)
+	endAt, err := time.ParseInLocation("2006-01-02 15:04:05-0700", tt.Eq(1).Text(), timezone.Tokyo)
 	if err != nil {
 		return time.Time{}, 0, errors.New("failed to parse end time")
 	}
