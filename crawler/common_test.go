@@ -49,9 +49,10 @@ func testHTMLMap(t *testing.T, target string) htmlMap {
 }
 
 type requestWant struct {
-	path  string
-	query url.Values
-	body  url.Values
+	path   string
+	query  url.Values
+	body   url.Values
+	called bool
 }
 
 type mockRequestRoundTripper struct {
@@ -66,9 +67,12 @@ func (m *mockRequestRoundTripper) RoundTrip(req *http.Request) (*http.Response, 
 	}, nil
 }
 
-type captureFunc func() (method, path string, query, body url.Values)
+type captureFunc func() (method, path string, query, body url.Values, called bool)
 
-func (m *mockRequestRoundTripper) lastCaputure() (string, string, url.Values, url.Values) {
+func (m *mockRequestRoundTripper) lastCaputure() (string, string, url.Values, url.Values, bool) {
+	if m.request == nil {
+		return "", "", nil, nil, false
+	}
 	query := m.request.URL.Query()
 	body := url.Values{}
 	if m.request.Body != nil {
@@ -79,7 +83,7 @@ func (m *mockRequestRoundTripper) lastCaputure() (string, string, url.Values, ur
 			panic(errors.Wrapf(err, "cannot parse request body: %s", string(b)))
 		}
 	}
-	return m.request.Method, m.request.URL.Path, query, body
+	return m.request.Method, m.request.URL.Path, query, body, true
 }
 
 func mockRequestClient() (*http.Client, captureFunc) {
