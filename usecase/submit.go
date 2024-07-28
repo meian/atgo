@@ -112,7 +112,7 @@ func (u Submit) readTaskLocal(ctx context.Context) (*models.TaskInfo, error) {
 func (u Submit) login(ctx context.Context, info models.TaskInfo) (bool, string, error) {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := &requests.Task{
+	req := requests.Task{
 		ContestID: info.ContestID,
 		TaskID:    info.TaskID,
 	}

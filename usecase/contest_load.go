@@ -34,9 +34,9 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 	logger := logs.FromContext(ctx).With("page", param.Page)
 	client := http.ClientFromContext(ctx)
 
-	req := &requests.ContestArchive{
+	req := requests.ContestArchive{
 		Page:      param.Page,
-		RatedType: param.RatedType,
+		RatedType: &param.RatedType,
 	}
 	res, err := crawler.NewContestArchive(client).Do(ctx, req)
 	if err != nil {

@@ -1,9 +1,7 @@
 package requests
 
-import "net/url"
-
 type Home struct{}
 
-func (r Home) URLValues() url.Values {
-	return url.Values{}
+func (r Home) Validate() error {
+	return nil
 }

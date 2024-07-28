@@ -16,12 +16,12 @@ import (
 func TestContestTask_Do_Request(t *testing.T) {
 	tests := []struct {
 		name string
-		req  *requests.ContestTask
+		req  requests.ContestTask
 		want requestWant
 	}{
 		{
 			name: "success",
-			req: &requests.ContestTask{
+			req: requests.ContestTask{
 				ContestID: "abc123",
 			},
 			want: requestWant{
@@ -30,6 +30,13 @@ func TestContestTask_Do_Request(t *testing.T) {
 				body:   url.Values{},
 				called: true,
 			},
+		},
+		{
+			name: "request is invalid",
+			req: requests.ContestTask{
+				ContestID: "",
+			},
+			want: requestWant{called: false},
 		},
 	}
 
@@ -155,7 +162,7 @@ func TestContestTask_Do_Response(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
 			defer cancel()
 			client := mockResponseClient(tt.httpRes.status, m.Get(tt.httpRes.bodyFile), tt.httpRes.timeout)
-			req := &requests.ContestTask{ContestID: "abc234"}
+			req := requests.ContestTask{ContestID: "abc234"}
 			res, err := crawler.NewContestTask(client).Do(ctx, req)
 			if tt.want.err {
 				if assert.Error(err) {

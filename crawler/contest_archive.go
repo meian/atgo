@@ -28,8 +28,10 @@ func NewContestArchive(client *http.Client) *ContestArchive {
 	return &ContestArchive{crawler: NewCrawler(url.ContestArchivePath).WithClient(client)}
 }
 
-func (c *ContestArchive) Do(ctx context.Context, req *requests.ContestArchive) (*responses.ContestArchive, error) {
-
+func (c *ContestArchive) Do(ctx context.Context, req requests.ContestArchive) (*responses.ContestArchive, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
 	logger := logs.FromContext(ctx).With(
 		slog.Group("request",
 			slog.Any("relatedType", req.RatedType),
