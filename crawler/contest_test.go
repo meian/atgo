@@ -15,23 +15,43 @@ import (
 )
 
 func TestContest_Do_Request(t *testing.T) {
-	req := &requests.Contest{
-		ContestID: "abc123",
-	}
-	want := requestWant{
-		path:  "/contests/abc123",
-		query: url.Values{},
-		body:  url.Values{},
+
+	tests := []struct {
+		name string
+		req  *requests.Contest
+		want requestWant
+	}{
+		{
+			name: "success",
+			req: &requests.Contest{
+				ContestID: "abc123",
+			},
+			want: requestWant{
+				path:   "/contests/abc123",
+				query:  url.Values{},
+				body:   url.Values{},
+				called: true,
+			},
+		},
 	}
 
-	assert := assert.New(t)
-	client, cFunc := mockRequestClient()
-	_, _ = crawler.NewContest(client).Do(context.Background(), req)
-	method, path, query, body := cFunc()
-	assert.Equal(http.MethodGet, method)
-	assert.Equal(want.path, path)
-	assert.Equal(want.query, query)
-	assert.Equal(want.body, body)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert := assert.New(t)
+			client, cFunc := mockRequestClient()
+			_, _ = crawler.NewContest(client).Do(context.Background(), tt.req)
+			method, path, query, body, called := cFunc()
+			if !tt.want.called {
+				assert.False(called)
+				return
+			}
+			assert.Equal(http.MethodGet, method)
+			assert.Equal(tt.want.path, path)
+			assert.Equal(tt.want.query, query)
+			assert.Equal(tt.want.body, body)
+			assert.True(called)
+		})
+	}
 }
 
 func TestContest_Do_Response(t *testing.T) {

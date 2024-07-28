@@ -14,26 +14,45 @@ import (
 )
 
 func TestLogin_Do_Request(t *testing.T) {
-	req := &requests.Login{
-		Username:  "user",
-		Password:  "pass",
-		CSRFToken: "token",
-		Continue:  "ctn",
-	}
-	want := requestWant{
-		path:  "/login",
-		query: url.Values{"continue": {"ctn"}},
-		body:  url.Values{"username": {"user"}, "password": {"pass"}, "csrf_token": {"token"}},
+	tests := []struct {
+		name string
+		req  *requests.Login
+		want requestWant
+	}{
+		{
+			name: "success",
+			req: &requests.Login{
+				Username:  "user",
+				Password:  "pass",
+				CSRFToken: "token",
+				Continue:  "ctn",
+			},
+			want: requestWant{
+				path:   "/login",
+				query:  url.Values{"continue": {"ctn"}},
+				body:   url.Values{"username": {"user"}, "password": {"pass"}, "csrf_token": {"token"}},
+				called: true,
+			},
+		},
 	}
 
-	assert := assert.New(t)
-	client, cFunc := mockRequestClient()
-	_, _ = crawler.NewLogin(client).Do(context.Background(), req)
-	method, path, query, body := cFunc()
-	assert.Equal(http.MethodPost, method)
-	assert.Equal(want.path, path)
-	assert.Equal(want.query, query)
-	assert.Equal(want.body, body)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert := assert.New(t)
+			client, cFunc := mockRequestClient()
+			_, _ = crawler.NewLogin(client).Do(context.Background(), tt.req)
+			method, path, query, body, called := cFunc()
+			if !tt.want.called {
+				assert.False(called)
+				return
+			}
+			assert.Equal(http.MethodPost, method)
+			assert.Equal(tt.want.path, path)
+			assert.Equal(tt.want.query, query)
+			assert.Equal(tt.want.body, body)
+			assert.True(called)
+		})
+	}
 }
 
 func TestLogin_Do_Response(t *testing.T) {
