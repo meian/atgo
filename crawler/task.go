@@ -17,15 +17,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-type TaskCrawler struct {
+type Task struct {
 	crawler *Crawler
 }
 
-func NewTaskCrawler(client *http.Client) *TaskCrawler {
-	return &TaskCrawler{crawler: NewCrawler(url.TaskPath).WithClient(client)}
+func NewTask(client *http.Client) *Task {
+	return &Task{crawler: NewCrawler(url.TaskPath).WithClient(client)}
 }
 
-func (c *TaskCrawler) Do(ctx context.Context, req *requests.Task) (*responses.Task, error) {
+func (c *Task) Do(ctx context.Context, req *requests.Task) (*responses.Task, error) {
 	logger := logs.FromContext(ctx).With(
 		slog.Group("request",
 			slog.Any("contestID", req.ContestID),
@@ -64,7 +64,7 @@ func (c *TaskCrawler) Do(ctx context.Context, req *requests.Task) (*responses.Ta
 	}, nil
 }
 
-func (c *TaskCrawler) parseScore(ctx context.Context, doc *goquery.Document) (*int, error) {
+func (c *Task) parseScore(ctx context.Context, doc *goquery.Document) (*int, error) {
 
 	stmt, err := c.taskStatement(ctx, doc)
 	if err != nil {
@@ -91,7 +91,7 @@ func (c *TaskCrawler) parseScore(ctx context.Context, doc *goquery.Document) (*i
 	return &score, nil
 }
 
-func (c *TaskCrawler) parseSamples(ctx context.Context, doc *goquery.Document) ([]responses.Task_Sample, error) {
+func (c *Task) parseSamples(ctx context.Context, doc *goquery.Document) ([]responses.Task_Sample, error) {
 
 	stmt, err := c.taskStatement(ctx, doc)
 	if err != nil {
@@ -133,7 +133,7 @@ func (c *TaskCrawler) parseSamples(ctx context.Context, doc *goquery.Document) (
 	return samples, nil
 }
 
-func (c *TaskCrawler) taskStatement(ctx context.Context, doc *goquery.Document) (*goquery.Selection, error) {
+func (c *Task) taskStatement(ctx context.Context, doc *goquery.Document) (*goquery.Selection, error) {
 	// span.stmt がない場合もあるので、その場合は div.task-statement を対象にする
 	stmt := doc.Find("span.lang-ja")
 	if stmt.Length() == 0 {
