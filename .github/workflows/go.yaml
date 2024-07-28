@@ -12,6 +12,7 @@ on:
       - 'go.mod'
       - 'go.sum'
       - '**.go'
+      - '**/testdata/**'
       - '.github/workflows/go.yaml'
   push:
     branches:
@@ -20,6 +21,7 @@ on:
       - 'go.mod'
       - 'go.sum'
       - '**.go'
+      - '**/testdata/**'
       - '.github/workflows/go.yaml'
 
 jobs:
