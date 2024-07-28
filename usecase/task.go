@@ -163,7 +163,7 @@ func (u Task) loadTaskSamples(ctx context.Context, contestID string, task *model
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
 	req := &requests.Task{TaskID: task.ID, ContestID: contestID}
-	res, err := crawler.NewTaskCrawler(client).Do(ctx, req)
+	res, err := crawler.NewTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())
 		return errors.New("failed to get task")

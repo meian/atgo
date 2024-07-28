@@ -116,7 +116,7 @@ func (u Submit) login(ctx context.Context, info models.TaskInfo) (bool, string, 
 		ContestID: info.ContestID,
 		TaskID:    info.TaskID,
 	}
-	res, err := crawler.NewTaskCrawler(client).Do(ctx, req)
+	res, err := crawler.NewTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())
 		return false, "", errors.New("failed to get task")
@@ -149,7 +149,7 @@ func (u Submit) login(ctx context.Context, info models.TaskInfo) (bool, string, 
 		logger.Warn("failed to login")
 		return false, "", nil
 	}
-	res, err = crawler.NewTaskCrawler(client).Do(ctx, req)
+	res, err = crawler.NewTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())
 		return false, "", errors.New("failed to get task")
