@@ -1,5 +1,6 @@
 package constant
 
+//go:generate go run github.com/dmarkham/enumer@latest -type=ContestCategory -trimprefix=ContestCategory -transform=kebab
 type ContestCategory int
 
 const (
