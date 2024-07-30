@@ -34,10 +34,10 @@ func (r ContestArchive) URLValues() url.Values {
 		vals.Add("page", fmt.Sprint(r.Page))
 	}
 	if r.RatedType != nil {
-		vals.Add("ratedType", fmt.Sprintf("%d", r.RatedType))
+		vals.Add("ratedType", fmt.Sprintf("%d", *r.RatedType))
 	}
 	if r.Category != nil {
-		vals.Add("category", fmt.Sprintf("%d", r.Category))
+		vals.Add("category", fmt.Sprintf("%d", *r.Category))
 	}
 	if r.Keyword != nil && len(*r.Keyword) > 0 {
 		vals.Add("keyword", *r.Keyword)
