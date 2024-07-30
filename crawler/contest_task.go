@@ -23,7 +23,10 @@ func NewContestTask(client *http.Client) *ContestTask {
 	return &ContestTask{crawler: NewCrawler(url.ContestTaskPath).WithClient(client)}
 }
 
-func (c *ContestTask) Do(ctx context.Context, req *requests.ContestTask) (*responses.ContestTask, error) {
+func (c *ContestTask) Do(ctx context.Context, req requests.ContestTask) (*responses.ContestTask, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
 	logger := logs.FromContext(ctx).With(
 		slog.Group("request",
 			slog.Any("contestID", req.ContestID),

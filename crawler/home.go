@@ -23,8 +23,11 @@ func NewHome(client *gohttp.Client) *Home {
 }
 
 func (c *Home) Do(ctx context.Context, req *requests.Home) (*responses.Home, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
 	ctx = http.ContextWithSkipWait(ctx)
-	doc, err := c.crawler.DocumentGet(ctx, req)
+	doc, err := c.crawler.DocumentGet(ctx, nil)
 	if err != nil {
 		logs.FromContext(ctx).Error(err.Error())
 		return nil, errors.New("failed to get document")

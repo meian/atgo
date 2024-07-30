@@ -24,7 +24,10 @@ func NewContest(client *http.Client) *Contest {
 	return &Contest{crawler: NewCrawler(url.ContestPath).WithClient(client)}
 }
 
-func (c *Contest) Do(ctx context.Context, req *requests.Contest) (*responses.Contest, error) {
+func (c *Contest) Do(ctx context.Context, req requests.Contest) (*responses.Contest, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
 	logger := logs.FromContext(ctx).With(
 		slog.Group("request",
 			slog.Any("contestID", req.ContestID),
