@@ -64,8 +64,8 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 			return nil, errors.New("failed to restore task files")
 		}
 		return &TaskLocalInitResult{
-			ContestID: contest.ID,
-			TaskID:    task.ID,
+			ContestID: string(contest.ID),
+			TaskID:    string(task.ID),
 			New:       false,
 		}, nil
 	}
@@ -137,8 +137,8 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 	}
 
 	return &TaskLocalInitResult{
-		ContestID: contest.ID,
-		TaskID:    task.ID,
+		ContestID: string(contest.ID),
+		TaskID:    string(task.ID),
 		New:       true,
 	}, nil
 }

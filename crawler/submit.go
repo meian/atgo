@@ -7,6 +7,7 @@ import (
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/url"
 	"github.com/pkg/errors"
 )
@@ -34,6 +35,6 @@ func (c *Submit) Do(ctx context.Context, req *requests.Submit) (*responses.Submi
 	}
 	// TODO: URLが違う場合にログを出す
 	return &responses.Submit{
-		Submitted: resp.Request.URL.String() == url.MySubmissionURL(req.ContestID),
+		Submitted: resp.Request.URL.String() == url.MySubmissionURL(ids.ContestID(req.ContestID)),
 	}, nil
 }

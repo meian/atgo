@@ -113,8 +113,8 @@ func (u Submit) login(ctx context.Context, info models.TaskInfo) (bool, string, 
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
 	req := requests.Task{
-		ContestID: info.ContestID,
-		TaskID:    info.TaskID,
+		ContestID: string(info.ContestID),
+		TaskID:    string(info.TaskID),
 	}
 	res, err := crawler.NewTask(client).Do(ctx, req)
 	if err != nil {
@@ -200,8 +200,8 @@ func (u Submit) submit(ctx context.Context, info *models.TaskInfo, source string
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
 	req := &requests.Submit{
-		ContestID:  info.ContestID,
-		TaskID:     info.TaskID,
+		ContestID:  string(info.ContestID),
+		TaskID:     string(info.TaskID),
 		LanguageID: constant.LanguageGo_1_20_6,
 		SourceCode: source,
 		CSRFToken:  csrfToken,

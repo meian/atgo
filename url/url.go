@@ -3,6 +3,8 @@ package url
 import (
 	"net/url"
 	"strings"
+
+	"github.com/meian/atgo/models/ids"
 )
 
 const (
@@ -30,23 +32,23 @@ func ContestArchiveURL() string {
 	return URL(ContestArchivePath, nil, nil).String()
 }
 
-func ContestURL(contestID string) string {
-	pathParams := map[string]string{"contestID": contestID}
+func ContestURL(contestID ids.ContestID) string {
+	pathParams := map[string]string{"contestID": string(contestID)}
 	return URL(ContestPath, pathParams, nil).String()
 }
 
-func ContestTaskURL(contestID string) string {
-	pathParams := map[string]string{"contestID": contestID}
+func ContestTaskURL(contestID ids.ContestID) string {
+	pathParams := map[string]string{"contestID": string(contestID)}
 	return URL(ContestTaskPath, pathParams, nil).String()
 }
 
-func TaskURL(contestID string, taskID string) string {
-	pathParams := map[string]string{"contestID": contestID, "id": taskID}
+func TaskURL(contestID ids.ContestID, taskID ids.TaskID) string {
+	pathParams := map[string]string{"contestID": string(contestID), "id": string(taskID)}
 	return URL(TaskPath, pathParams, nil).String()
 }
 
-func MySubmissionURL(contestID string) string {
-	pathParams := map[string]string{"contestID": contestID}
+func MySubmissionURL(contestID ids.ContestID) string {
+	pathParams := map[string]string{"contestID": string(contestID)}
 	return URL(MySubmissionPath, pathParams, nil).String()
 }
 

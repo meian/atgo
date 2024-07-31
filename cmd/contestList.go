@@ -84,7 +84,7 @@ func toContestListOutputModel(res *usecase.ContestListResult, ratedType string) 
 		idLen = max(idLen, text.StringWidth(c.ID))
 		titleLen = max(titleLen, text.StringWidth(c.Title))
 		contests = append(contests, ContestListOutputModel_Contest{
-			ID:      c.ID,
+			ID:      string(c.ID),
 			Title:   c.Title,
 			StartAt: c.StartAt,
 			EndAt:   c.StartAt.Add(c.Duration),

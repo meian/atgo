@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 )
 
 type Contest struct {
@@ -16,7 +17,7 @@ type Contest struct {
 
 func (c Contest) ToModel() *models.Contest {
 	return &models.Contest{
-		ID:         c.ID,
+		ID:         ids.ContestID(c.ID),
 		Title:      c.Title,
 		StartAt:    c.StartAt,
 		Duration:   c.Duration,

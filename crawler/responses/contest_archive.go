@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"gopkg.in/guregu/null.v3"
 )
 
@@ -33,7 +34,7 @@ type ContestArchive_Contest struct {
 
 func (c ContestArchive_Contest) ToModel(ratedType *string) models.Contest {
 	return models.Contest{
-		ID:         c.ID,
+		ID:         ids.ContestID(c.ID),
 		RatedType:  null.StringFromPtr(ratedType),
 		Title:      c.Title,
 		StartAt:    c.StartAt,

@@ -7,6 +7,7 @@ import (
 
 	"github.com/meian/atgo/files"
 	"github.com/meian/atgo/io"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/url"
 	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
@@ -18,12 +19,12 @@ type taskYAML struct {
 }
 
 type TaskInfo struct {
-	ContestID string `yaml:"contest-id"`
-	TaskID    string `yaml:"task-id"`
+	ContestID ids.ContestID `yaml:"contest-id"`
+	TaskID    ids.TaskID    `yaml:"task-id"`
 }
 
 func (ti TaskInfo) TaskDir() string {
-	return filepath.Join(workspace.TaskRootDir(), ti.ContestID, ti.TaskID)
+	return filepath.Join(workspace.TaskRootDir(), string(ti.ContestID), string(ti.TaskID))
 }
 
 func (ti TaskInfo) TaskURL() string {
