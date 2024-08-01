@@ -3,12 +3,13 @@ package models
 import (
 	"time"
 
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/url"
 	"gopkg.in/guregu/null.v3"
 )
 
 type Contest struct {
-	ID         string        `gorm:"primaryKey"`
+	ID         ids.ContestID `gorm:"primaryKey"`
 	RatedType  null.String   `gorm:"index"`
 	Title      string        `gorm:"not null"`
 	StartAt    time.Time     `gorm:"not null"`

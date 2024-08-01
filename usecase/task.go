@@ -10,6 +10,7 @@ import (
 	"github.com/meian/atgo/http"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/repo"
 	"github.com/meian/atgo/usecase/common"
 	"github.com/meian/atgo/workspace"
@@ -44,38 +45,38 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 	ctrepo := repo.NewContestTaskWithDBConn(dbConn)
 	trepo := repo.NewTaskWithDBConn(dbConn)
 
-	task, err := trepo.Find(ctx, info.TaskID)
+	task, err := trepo.Find(ctx, string(info.TaskID))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find task")
 	}
 	if task == nil {
-		task, err = u.createTask(ctx, info.ContestID, info.TaskID)
+		task, err = u.createTask(ctx, string(info.ContestID), string(info.TaskID))
 		if err != nil {
 			logger.Error(err.Error())
 			return nil, errors.New("failed to create task")
 		}
 	}
 	if !task.Loaded {
-		err := u.loadTaskSamples(ctx, info.ContestID, task)
+		err := u.loadTaskSamples(ctx, string(info.ContestID), task)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	contest, err := crepo.Find(ctx, info.ContestID)
+	contest, err := crepo.Find(ctx, string(info.ContestID))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest")
 	}
 	if contest == nil {
-		contest, err = (&Contest{}).createContest(ctx, info.ContestID)
+		contest, err = (&Contest{}).createContest(ctx, string(info.ContestID))
 		if err != nil {
 			logger.Error(err.Error())
 			return nil, errors.New("failed to create contest")
 		}
 	}
-	ct, err := ctrepo.FindByIDs(ctx, info.ContestID, info.TaskID)
+	ct, err := ctrepo.FindByIDs(ctx, string(info.ContestID), string(info.TaskID))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest task")
@@ -84,7 +85,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		return nil, errors.New("the specified contest and task are not related")
 	}
 	if param.ShowSamples {
-		task, err = trepo.FindWithSamples(ctx, info.TaskID)
+		task, err = trepo.FindWithSamples(ctx, string(info.TaskID))
 	} else {
 		task.Samples = nil
 	}
@@ -162,7 +163,7 @@ func (u Task) createTask(ctx context.Context, contestID string, taskID string) (
 func (u Task) loadTaskSamples(ctx context.Context, contestID string, task *models.Task) error {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := requests.Task{TaskID: task.ID, ContestID: contestID}
+	req := requests.Task{TaskID: string(task.ID), ContestID: contestID}
 	res, err := crawler.NewTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())
@@ -174,7 +175,7 @@ func (u Task) loadTaskSamples(ctx context.Context, contestID string, task *model
 	for i, s := range res.Samples {
 		index := i + 1
 		sample := models.TaskSample{
-			ID:     fmt.Sprintf("%s_%d", task.ID, index),
+			ID:     ids.TaskSampleID(fmt.Sprintf("%s_%d", task.ID, index)),
 			TaskID: task.ID,
 			Index:  fmt.Sprint(i + 1),
 			Type:   models.TaskSampleTypeSystem,

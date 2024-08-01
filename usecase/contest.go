@@ -36,13 +36,13 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 	logger = logger.With("contestID", info.ContestID)
 	ctx = logs.ContextWith(ctx, logger)
 
-	contest, err := repo.Find(ctx, info.ContestID)
+	contest, err := repo.Find(ctx, string(info.ContestID))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest")
 	}
 	if contest == nil {
-		contest, err = u.createContest(ctx, info.ContestID)
+		contest, err = u.createContest(ctx, string(info.ContestID))
 		if err != nil {
 			return nil, err
 		}
@@ -54,13 +54,13 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 		}
 	}
 
-	contest, err = repo.FindWithTasks(ctx, info.ContestID)
+	contest, err = repo.FindWithTasks(ctx, string(info.ContestID))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest with tasks")
 	}
 
-	if param.ContestID != info.ContestID {
+	if param.ContestID != string(info.ContestID) {
 		taskFile, _ := workspace.TaskInfoFile()
 		if err := info.WriteFile(taskFile); err != nil {
 			logger.Error(err.Error())
@@ -101,7 +101,7 @@ func (u Contest) createContest(ctx context.Context, contestID string) (*models.C
 func (u Contest) loadTasks(ctx context.Context, contest *models.Contest) error {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := requests.ContestTask{ContestID: contest.ID}
+	req := requests.ContestTask{ContestID: string(contest.ID)}
 	res, err := crawler.NewContestTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())

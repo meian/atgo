@@ -10,6 +10,7 @@ import (
 	"github.com/meian/atgo/http"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/repo"
 	"github.com/meian/atgo/util"
 	"github.com/pkg/errors"
@@ -56,7 +57,7 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 		return nil, errors.New("failed to find contests")
 	}
 	contestm := util.ToMap(contests, func(c models.Contest) string {
-		return c.ID
+		return string(c.ID)
 	})
 
 	ratedType := param.RatedType.String()
@@ -68,7 +69,7 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 		if !ok {
 			logger.Debug("new contest")
 			newContests = append(newContests, models.Contest{
-				ID:         contest.ID,
+				ID:         ids.ContestID(contest.ID),
 				Title:      contest.Title,
 				StartAt:    contest.StartAt,
 				Duration:   contest.Duration,

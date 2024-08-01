@@ -6,6 +6,7 @@ import (
 
 	"github.com/meian/atgo/io"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/text"
 	"github.com/meian/atgo/tmpl"
 	"github.com/meian/atgo/usecase"
@@ -101,7 +102,7 @@ func toContestOutputModel(res *usecase.ContestResult) ContestOutputModel {
 }
 
 type ContestOutputModel struct {
-	ID         string
+	ID         ids.ContestID
 	RatedType  string
 	Title      string
 	StartAt    time.Time
@@ -113,7 +114,7 @@ type ContestOutputModel struct {
 type ContestOutputModel_Task struct {
 	Index        string
 	IndexPadding string
-	ID           string
+	ID           ids.TaskID
 	IDPadding    string
 	Title        string
 	TitlePadding string

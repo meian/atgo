@@ -6,6 +6,7 @@ import (
 
 	"github.com/meian/atgo/files"
 	"github.com/meian/atgo/help"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/url"
 	"github.com/meian/atgo/usecase"
 	"github.com/meian/atgo/workspace"
@@ -50,7 +51,7 @@ Do not edit task-local.yaml manually as it is used when submitting code with ` +
 		}
 
 		cmd.Println("local workspace is inited.")
-		cmd.Println(url.TaskURL(res.ContestID, res.TaskID))
+		cmd.Println(url.TaskURL(ids.ContestID(res.ContestID), ids.TaskID(res.TaskID)))
 
 		if !taskLocalInitFlag.noOpen && os.Getenv("TERM_PROGRAM") == "vscode" {
 			ws := workspace.Dir()

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 )
 
 type ContestTask struct {
@@ -17,13 +18,13 @@ func (ct ContestTask) ToModel() []models.ContestTask {
 	for i, t := range ct.Tasks {
 		id := fmt.Sprintf("%s-%s", ct.ContestID, t.ID)
 		tasks = append(tasks, models.ContestTask{
-			ID:        id,
-			ContestID: ct.ContestID,
-			TaskID:    t.ID,
+			ID:        ids.ContestTaskID(id),
+			ContestID: ids.ContestID(ct.ContestID),
+			TaskID:    ids.TaskID(t.ID),
 			Order:     i + 1,
 			Index:     t.Index,
 			Task: models.Task{
-				ID:        t.ID,
+				ID:        ids.TaskID(t.ID),
 				Title:     t.Title,
 				TimeLimit: t.TimeLimit,
 				Memory:    t.Memory,

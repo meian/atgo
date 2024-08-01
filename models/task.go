@@ -3,11 +3,12 @@ package models
 import (
 	"time"
 
+	"github.com/meian/atgo/models/ids"
 	"gopkg.in/guregu/null.v3"
 )
 
 type Task struct {
-	ID        string        `gorm:"primaryKey"`
+	ID        ids.TaskID    `gorm:"primaryKey"`
 	Title     string        `gorm:"not null"`
 	TimeLimit time.Duration `gorm:"type:integer;not null"`
 	Memory    int           `gorm:"not null"`
