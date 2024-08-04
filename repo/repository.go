@@ -9,16 +9,16 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type repository[T any] struct {
+type repository[M any] struct {
 	DBConn *database.DBConn
 }
 
-func newRepositoryWithDBConn[T any](dbConn *database.DBConn) *repository[T] {
-	return &repository[T]{dbConn}
+func newRepositoryWithDBConn[M any](dbConn *database.DBConn) *repository[M] {
+	return &repository[M]{dbConn}
 }
 
-func (r *repository[T]) Find(ctx context.Context, id string) (*T, error) {
-	var m T
+func (r *repository[M]) Find(ctx context.Context, id string) (*M, error) {
+	var m M
 	err := r.DBConn.DB().Omit(clause.Associations).Where("id = ?", id).First(&m).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -29,35 +29,31 @@ func (r *repository[T]) Find(ctx context.Context, id string) (*T, error) {
 	return &m, nil
 }
 
-func (r *repository[T]) Create(ctx context.Context, model *T) error {
+func (r *repository[M]) Create(ctx context.Context, model *M) error {
 	return r.DBConn.DB().Omit(clause.Associations).Create(model).Error
 }
 
-func (r *repository[T]) CreateBatch(ctx context.Context, models []T) error {
+func (r *repository[M]) CreateBatch(ctx context.Context, models []M) error {
 	return r.DBConn.DB().Omit(clause.Associations).Create(models).Error
 }
 
-func (r *repository[T]) Update(ctx context.Context, model *T) error {
+func (r *repository[M]) Update(ctx context.Context, model *M) error {
 	return r.DBConn.DB().Omit(clause.Associations).Save(model).Error
 }
 
-func (r *repository[T]) UpdateWithChilds(ctx context.Context, models *T) error {
+func (r *repository[M]) UpdateWithChilds(ctx context.Context, models *M) error {
 	return r.DBConn.DB().Save(models).Error
 }
 
-func (r *repository[T]) Delete(ctx context.Context, model *T) error {
-	return r.DBConn.DB().Omit(clause.Associations).Delete(model).Error
-}
-
-func (r *repository[T]) TableName() string {
-	var m T
+func (r *repository[M]) TableName() string {
+	var m M
 	return database.TableName(r.DBConn.DB(), m)
 }
 
-func (r *repository[T]) Truncate(ctx context.Context) error {
+func (r *repository[M]) Truncate(ctx context.Context) error {
 	return r.DBConn.DB().Exec("DELETE FROM " + r.TableName()).Error
 }
 
-func (r *repository[T]) Tx(f func(conn *database.DBConn) error) error {
+func (r *repository[M]) Tx(f func(conn *database.DBConn) error) error {
 	return r.DBConn.Transaction(f)
 }
