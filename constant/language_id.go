@@ -12,6 +12,11 @@ var idNames = map[LanguageID]string{
 	LanguageGo_1_20_6: "Go (1.20.6)",
 }
 
+func (id LanguageID) Valid() bool {
+	_, ok := idNames[id]
+	return ok
+}
+
 func (id LanguageID) StringValue() string {
 	return fmt.Sprint(id)
 }
