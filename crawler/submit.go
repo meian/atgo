@@ -20,7 +20,10 @@ func NewSubmit(client *http.Client) *Submit {
 	return &Submit{crawler: NewCrawler(url.SubmitPath).WithClient(client)}
 }
 
-func (c *Submit) Do(ctx context.Context, req *requests.Submit) (*responses.Submit, error) {
+func (c *Submit) Do(ctx context.Context, req requests.Submit) (*responses.Submit, error) {
+	if err := req.Validate(); err != nil {
+		return nil, err
+	}
 	logger := logs.FromContext(ctx)
 	crawler := c.crawler.WithPathParam("contestID", req.ContestID)
 	resp, err := crawler.Post(ctx, nil, req)
@@ -29,6 +32,10 @@ func (c *Submit) Do(ctx context.Context, req *requests.Submit) (*responses.Submi
 		return nil, errors.New("failed to post document")
 	}
 	defer resp.Body.Close()
+	if err := c.crawler.validHTML(ctx, resp.Body); err != nil {
+		logger.Error(err.Error())
+		return nil, errors.New("response is not a valid HTML")
+	}
 	if resp.StatusCode != http.StatusOK {
 		logger.With("statusCode", resp.StatusCode).Error("unexpected status code")
 		return nil, errors.New("unexpected status code for submit")

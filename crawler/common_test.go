@@ -96,15 +96,29 @@ func mockRequestClient() (*http.Client, captureFunc) {
 }
 
 type mockHTTPResponse struct {
-	status   int
-	bodyFile string
-	timeout  bool
+	lastRequestURL string
+	status         int
+	bodyFile       string
+	timeout        bool
+}
+
+func (m *mockHTTPResponse) NewClient(t *testing.T, hm htmlMap) *http.Client {
+	t.Helper()
+	rt := &mockResponseRoundTripper{status: m.status, body: hm.Get(m.bodyFile), timeout: m.timeout}
+	if m.lastRequestURL != "" {
+		req, err := http.NewRequest(http.MethodGet, m.lastRequestURL, nil)
+		require.NoError(t, err)
+		require.NotNil(t, req)
+		rt.lastRequest = req
+	}
+	return &http.Client{Transport: rt}
 }
 
 type mockResponseRoundTripper struct {
-	status  int
-	body    string
-	timeout bool
+	lastRequest *http.Request
+	status      int
+	body        string
+	timeout     bool
 }
 
 func (m *mockResponseRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
@@ -114,13 +128,18 @@ func (m *mockResponseRoundTripper) RoundTrip(req *http.Request) (*http.Response,
 	} else {
 		wait = time.After(0 * time.Second)
 	}
+	ctx := req.Context()
+	if m.lastRequest != nil {
+		req = m.lastRequest
+	}
 	select {
 	case <-wait:
 		return &http.Response{
+			Request:    req,
 			StatusCode: m.status,
 			Body:       io.NopCloser(strings.NewReader(m.body)),
 		}, nil
-	case <-req.Context().Done():
+	case <-ctx.Done():
 		return nil, errors.New("request canceled for timeout")
 	}
 }
