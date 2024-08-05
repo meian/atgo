@@ -62,6 +62,7 @@ type mockRequestRoundTripper struct {
 func (m *mockRequestRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	m.request = req
 	return &http.Response{
+		Request:    req,
 		StatusCode: http.StatusOK,
 		Body:       io.NopCloser(strings.NewReader("OK")),
 	}, nil
