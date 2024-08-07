@@ -1,7 +1,5 @@
 package requests
 
-import "github.com/pkg/errors"
-
 type Task struct {
 	ContestID string
 	TaskID    string
@@ -9,10 +7,10 @@ type Task struct {
 
 func (r Task) Validate() error {
 	if r.ContestID == "" {
-		return errors.New("contest id is required")
+		return ErrReqContestID
 	}
 	if r.TaskID == "" {
-		return errors.New("task id is required")
+		return ErrReqTaskID
 	}
 	return nil
 }
