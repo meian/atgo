@@ -4,7 +4,6 @@ import (
 	"net/url"
 
 	"github.com/meian/atgo/constant"
-	"github.com/pkg/errors"
 )
 
 type Submit struct {
@@ -17,19 +16,19 @@ type Submit struct {
 
 func (r Submit) Validate() error {
 	if r.ContestID == "" {
-		return errors.New("contest id is required")
+		return ErrReqContestID
 	}
 	if r.TaskID == "" {
-		return errors.New("task id is required")
+		return ErrReqTaskID
 	}
 	if !r.LanguageID.Valid() {
-		return errors.Errorf("invalid language id: %d", r.LanguageID)
+		return ErrInvalidLanguageID(r.LanguageID)
 	}
 	if r.SourceCode == "" {
-		return errors.New("source code is required")
+		return ErrReqSourceCode
 	}
 	if r.CSRFToken == "" {
-		return errors.New("csrf token is required")
+		return ErrReqCSRFToken
 	}
 	return nil
 }

@@ -5,7 +5,6 @@ import (
 	"net/url"
 
 	"github.com/meian/atgo/constant"
-	"github.com/pkg/errors"
 )
 
 type ContestArchive struct {
@@ -17,13 +16,13 @@ type ContestArchive struct {
 
 func (r ContestArchive) Validate() error {
 	if r.Page <= 0 {
-		return errors.New("page must be greater than 0")
+		return ErrPageGT0
 	}
 	if r.RatedType != nil && !r.RatedType.IsARatedType() {
-		return errors.Errorf("invalid rated type: %d", r.RatedType)
+		return ErrInvalidRatedType(*r.RatedType)
 	}
 	if r.Category != nil && !r.Category.IsAContestCategory() {
-		return errors.Errorf("invalid category: %d", r.Category)
+		return ErrInvalidCategory(*r.Category)
 	}
 	return nil
 }
