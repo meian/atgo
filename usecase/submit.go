@@ -199,7 +199,7 @@ func (u Submit) sourceCode(ctx context.Context) (string, error) {
 func (u Submit) submit(ctx context.Context, info *models.TaskInfo, source string, csrfToken string) (bool, error) {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := &requests.Submit{
+	req := requests.Submit{
 		ContestID:  string(info.ContestID),
 		TaskID:     string(info.TaskID),
 		LanguageID: constant.LanguageGo_1_20_6,

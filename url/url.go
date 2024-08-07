@@ -47,6 +47,11 @@ func TaskURL(contestID ids.ContestID, taskID ids.TaskID) string {
 	return URL(TaskPath, pathParams, nil).String()
 }
 
+func SubmitURL(contestID ids.ContestID) string {
+	pathParams := map[string]string{"contestID": string(contestID)}
+	return URL(SubmitPath, pathParams, nil).String()
+}
+
 func MySubmissionURL(contestID ids.ContestID) string {
 	pathParams := map[string]string{"contestID": string(contestID)}
 	return URL(MySubmissionPath, pathParams, nil).String()
