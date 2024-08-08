@@ -36,7 +36,7 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 	logger = logger.With("contestID", info.ContestID)
 	ctx = logs.ContextWith(ctx, logger)
 
-	contest, err := repo.Find(ctx, string(info.ContestID))
+	contest, err := repo.Find(ctx, info.ContestID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest")
@@ -54,7 +54,7 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 		}
 	}
 
-	contest, err = repo.FindWithTasks(ctx, string(info.ContestID))
+	contest, err = repo.FindWithTasks(ctx, info.ContestID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest with tasks")

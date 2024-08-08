@@ -45,7 +45,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 	ctrepo := repo.NewContestTaskWithDBConn(dbConn)
 	trepo := repo.NewTaskWithDBConn(dbConn)
 
-	task, err := trepo.Find(ctx, string(info.TaskID))
+	task, err := trepo.Find(ctx, info.TaskID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find task")
@@ -64,7 +64,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		}
 	}
 
-	contest, err := crepo.Find(ctx, string(info.ContestID))
+	contest, err := crepo.Find(ctx, info.ContestID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest")
@@ -76,7 +76,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 			return nil, errors.New("failed to create contest")
 		}
 	}
-	ct, err := ctrepo.FindByIDs(ctx, string(info.ContestID), string(info.TaskID))
+	ct, err := ctrepo.FindByIDs(ctx, info.ContestID, info.TaskID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest task")
@@ -85,7 +85,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		return nil, errors.New("the specified contest and task are not related")
 	}
 	if param.ShowSamples {
-		task, err = trepo.FindWithSamples(ctx, string(info.TaskID))
+		task, err = trepo.FindWithSamples(ctx, info.TaskID)
 	} else {
 		task.Samples = nil
 	}
@@ -130,7 +130,7 @@ func (u Task) createTask(ctx context.Context, contestID string, taskID string) (
 	logger := logs.FromContext(ctx)
 
 	ctx = logs.ContextWith(ctx, logger)
-	contest, err := repo.NewContest(database.FromContext(ctx)).Find(ctx, contestID)
+	contest, err := repo.NewContest(database.FromContext(ctx)).Find(ctx, ids.ContestID(contestID))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest")
@@ -148,7 +148,7 @@ func (u Task) createTask(ctx context.Context, contestID string, taskID string) (
 		}
 	}
 
-	task, err := repo.NewTask(database.FromContext(ctx)).Find(ctx, taskID)
+	task, err := repo.NewTask(database.FromContext(ctx)).Find(ctx, ids.TaskID(taskID))
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find task")

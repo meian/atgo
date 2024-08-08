@@ -3,17 +3,17 @@ package repo
 import (
 	"context"
 
-	"github.com/meian/atgo/constant"
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/repo/params"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type Contest struct {
-	*repository[models.Contest]
+	*repository[models.Contest, ids.ContestID]
 }
 
 func NewContest(db *gorm.DB) *Contest {
@@ -21,7 +21,7 @@ func NewContest(db *gorm.DB) *Contest {
 }
 
 func NewContestWithDBConn(dbConn *database.DBConn) *Contest {
-	return &Contest{newRepositoryWithDBConn[models.Contest](dbConn)}
+	return &Contest{newRepositoryWithDBConn[models.Contest, ids.ContestID](dbConn)}
 }
 
 func (r *Contest) Search(ctx context.Context, p *params.Contest) ([]models.Contest, error) {
@@ -34,7 +34,7 @@ func (r *Contest) Search(ctx context.Context, p *params.Contest) ([]models.Conte
 	}
 	var contests []models.Contest
 	query := r.DBConn.DB()
-	if p.RatedType != nil && *p.RatedType != constant.RatedTypeAll.String() {
+	if p.RatedType != nil {
 		query = query.Where("rated_type = ?", p.RatedType)
 	}
 	query = query.Order("start_at DESC")
@@ -46,7 +46,7 @@ func (r *Contest) Search(ctx context.Context, p *params.Contest) ([]models.Conte
 	return contests, nil
 }
 
-func (r *Contest) FindWithTasks(ctx context.Context, id string) (*models.Contest, error) {
+func (r *Contest) FindWithTasks(ctx context.Context, id ids.ContestID) (*models.Contest, error) {
 	var contest models.Contest
 	err := r.DBConn.DB().
 		Preload("ContestTasks", func(db *gorm.DB) *gorm.DB {
@@ -65,7 +65,7 @@ func (r *Contest) FindWithTasks(ctx context.Context, id string) (*models.Contest
 	return &contest, nil
 }
 
-func (r *Contest) FindByIDs(ctx context.Context, ids []string) ([]models.Contest, error) {
+func (r *Contest) FindByIDs(ctx context.Context, ids []ids.ContestID) ([]models.Contest, error) {
 	var contests []models.Contest
 	if err := r.DBConn.DB().Where("id IN (?)", ids).Find(&contests).Error; err != nil {
 		return nil, errors.Wrapf(err, "failed to find contests: ids=%v", ids)

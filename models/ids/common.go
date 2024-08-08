@@ -2,7 +2,7 @@ package ids
 
 import "errors"
 
-type modelID interface {
+type ModelID interface {
 	~string
 	Validate() error
 }
@@ -24,7 +24,7 @@ func (e errInvalidFormat) String() string {
 	return e.Error()
 }
 
-func newErrInvalidFormat[ID modelID](label string, id ID) error {
+func newErrInvalidFormat[ID ModelID](label string, id ID) error {
 	return errInvalidFormat{label: label, id: string(id)}
 }
 
@@ -41,7 +41,7 @@ func (e errTooLong) String() string {
 	return e.Error()
 }
 
-func validateLen[ID modelID](label string, id ID) error {
+func validateLen[ID ModelID](label string, id ID) error {
 	if len(id) > 64 {
 		return errTooLong{label: label, id: string(id)}
 	}
