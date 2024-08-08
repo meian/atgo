@@ -6,12 +6,13 @@ import (
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type Task struct {
-	*repository[models.Task]
+	*repository[models.Task, ids.TaskID]
 }
 
 func NewTask(db *gorm.DB) *Task {
@@ -19,10 +20,10 @@ func NewTask(db *gorm.DB) *Task {
 }
 
 func NewTaskWithDBConn(dbConn *database.DBConn) *Task {
-	return &Task{newRepositoryWithDBConn[models.Task](dbConn)}
+	return &Task{newRepositoryWithDBConn[models.Task, ids.TaskID](dbConn)}
 }
 
-func (r *Task) FindWithSamples(ctx context.Context, taskID string) (*models.Task, error) {
+func (r *Task) FindWithSamples(ctx context.Context, taskID ids.TaskID) (*models.Task, error) {
 	var task models.Task
 	err := r.DBConn.DB().
 		Preload("Samples").

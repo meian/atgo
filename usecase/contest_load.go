@@ -45,9 +45,13 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 		return nil, errors.New("failed to list contests")
 	}
 
-	cids := res.Contests.IDs()
-	if len(cids) == 0 {
+	contestIDs := res.Contests.IDs()
+	if len(contestIDs) == 0 {
 		return nil, errors.New("no archived contests.")
+	}
+	cids := make([]ids.ContestID, len(contestIDs))
+	for i, id := range contestIDs {
+		cids[i] = ids.ContestID(id)
 	}
 	logger = logger.With("totalPages", res.TotalPages)
 	crepo := repo.NewContest(database.FromContext(ctx))

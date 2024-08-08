@@ -6,12 +6,13 @@ import (
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 )
 
 type ContestTask struct {
-	*repository[models.ContestTask]
+	*repository[models.ContestTask, ids.ContestTaskID]
 }
 
 func NewContestTask(db *gorm.DB) *ContestTask {
@@ -19,10 +20,10 @@ func NewContestTask(db *gorm.DB) *ContestTask {
 }
 
 func NewContestTaskWithDBConn(dbConn *database.DBConn) *ContestTask {
-	return &ContestTask{newRepositoryWithDBConn[models.ContestTask](dbConn)}
+	return &ContestTask{newRepositoryWithDBConn[models.ContestTask, ids.ContestTaskID](dbConn)}
 }
 
-func (r *ContestTask) FindByIDs(ctx context.Context, contestID, taskID string) (*models.ContestTask, error) {
+func (r *ContestTask) FindByIDs(ctx context.Context, contestID ids.ContestID, taskID ids.TaskID) (*models.ContestTask, error) {
 	var contestTask models.ContestTask
 	err := r.DBConn.DB().
 		Preload("Task").
