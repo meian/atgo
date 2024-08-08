@@ -6,8 +6,10 @@ import (
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/repo"
 	"github.com/meian/atgo/repo/params"
+	"github.com/meian/atgo/util"
 	"github.com/pkg/errors"
 )
 
@@ -25,7 +27,7 @@ type ContestListResult struct {
 
 func (u ContestList) Run(ctx context.Context, param ContestListParam) (*ContestListResult, error) {
 	p := params.NewContest()
-	p.RatedType = &param.RatedType
+	p.RatedType = util.ToPtr(ids.RatedType(param.RatedType))
 	p.Page = param.Page
 	p.Size = param.Size
 	contests, err := repo.NewContest(database.FromContext(ctx)).Search(ctx, p)

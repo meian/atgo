@@ -6,6 +6,7 @@ import (
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/repo"
 	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
@@ -64,7 +65,7 @@ func (u Init) Run(ctx context.Context, param InitParam) (*InitResult, error) {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to create rated types")
 	}
-	ss := make([]string, len(ratedTypes))
+	ss := make([]ids.RatedType, len(ratedTypes))
 	for i, rt := range ratedTypes {
 		ss[i] = rt.Type
 	}

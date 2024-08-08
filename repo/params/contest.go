@@ -2,16 +2,15 @@ package params
 
 import (
 	"context"
-	"slices"
 
-	"github.com/meian/atgo/constant"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/models/ids"
 	"github.com/pkg/errors"
 )
 
 type Contest struct {
 	*baseParam
-	RatedType *string
+	RatedType *ids.RatedType
 }
 
 func NewContest() *Contest {
@@ -21,9 +20,11 @@ func NewContest() *Contest {
 }
 
 func (p *Contest) Validate(ctx context.Context) error {
-	if p.RatedType != nil && !slices.Contains(constant.RatedTypeStrings(), *p.RatedType) {
-		logs.FromContext(ctx).With("ratedType", p.RatedType).Error("undefined type")
-		return errors.New("invalid rated type")
+	if p.RatedType != nil {
+		if err := p.RatedType.Validate(); err != nil {
+			logs.FromContext(ctx).Error(err.Error())
+			return errors.New("invalid rated type")
+		}
 	}
 	if err := p.baseParam.Validate(ctx); err != nil {
 		return err

@@ -3,7 +3,6 @@ package repo
 import (
 	"context"
 
-	"github.com/meian/atgo/constant"
 	"github.com/meian/atgo/database"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
@@ -34,7 +33,7 @@ func (r *Contest) Search(ctx context.Context, p *params.Contest) ([]models.Conte
 	}
 	var contests []models.Contest
 	query := r.DBConn.DB()
-	if p.RatedType != nil && *p.RatedType != constant.RatedTypeAll.String() {
+	if p.RatedType != nil {
 		query = query.Where("rated_type = ?", p.RatedType)
 	}
 	query = query.Order("start_at DESC")
