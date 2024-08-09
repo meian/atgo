@@ -136,7 +136,7 @@ func (c *Task) parseSamples(ctx context.Context, doc *goquery.Document) ([]respo
 	return samples, nil
 }
 
-func (c *Task) taskStatement(ctx context.Context, doc *goquery.Document) (*goquery.Selection, error) {
+func (c *Task) taskStatement(_ context.Context, doc *goquery.Document) (*goquery.Selection, error) {
 	// span.stmt がない場合もあるので、その場合は div.task-statement を対象にする
 	stmt := doc.Find("span.lang-ja")
 	if stmt.Length() == 0 {
