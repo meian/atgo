@@ -34,7 +34,7 @@ type ContestArchive_Contest struct {
 
 func (c ContestArchive_Contest) ToModel(ratedType *string) models.Contest {
 	return models.Contest{
-		ID:         ids.ContestID(c.ID),
+		ID:         c.ID,
 		RatedType:  null.StringFromPtr(ratedType),
 		Title:      c.Title,
 		StartAt:    c.StartAt,
