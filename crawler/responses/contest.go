@@ -8,7 +8,7 @@ import (
 )
 
 type Contest struct {
-	ID         string
+	ID         ids.ContestID
 	Title      string
 	StartAt    time.Time
 	Duration   time.Duration
@@ -17,7 +17,7 @@ type Contest struct {
 
 func (c Contest) ToModel() *models.Contest {
 	return &models.Contest{
-		ID:         ids.ContestID(c.ID),
+		ID:         c.ID,
 		Title:      c.Title,
 		StartAt:    c.StartAt,
 		Duration:   c.Duration,

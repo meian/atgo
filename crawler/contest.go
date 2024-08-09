@@ -11,6 +11,7 @@ import (
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/timezone"
 	"github.com/meian/atgo/url"
 	"github.com/pkg/errors"
@@ -61,7 +62,7 @@ func (c *Contest) Do(ctx context.Context, req requests.Contest) (*responses.Cont
 	}
 
 	return &responses.Contest{
-		ID:         req.ContestID,
+		ID:         ids.ContestID(req.ContestID),
 		Title:      title,
 		StartAt:    startAt,
 		Duration:   duration,

@@ -10,6 +10,7 @@ import (
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/url"
 	"github.com/meian/atgo/util"
 	"github.com/pkg/errors"
@@ -48,7 +49,7 @@ func (c *ContestTask) Do(ctx context.Context, req requests.ContestTask) (*respon
 	}
 
 	return &responses.ContestTask{
-		ContestID: req.ContestID,
+		ContestID: ids.ContestID(req.ContestID),
 		Tasks:     tasks,
 	}, nil
 }
@@ -111,7 +112,7 @@ func (c *ContestTask) parseTask(ctx context.Context, tr *goquery.Selection) (*re
 		return nil, errors.Wrap(err, "failed to parse memory limit")
 	}
 	return &responses.ContestTask_Task{
-		ID:        id,
+		ID:        ids.TaskID(id),
 		Index:     symbol,
 		Title:     title,
 		TimeLimit: sec,

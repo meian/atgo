@@ -175,9 +175,9 @@ func (u Task) loadTaskSamples(ctx context.Context, contestID string, task *model
 	for i, s := range res.Samples {
 		index := i + 1
 		sample := models.TaskSample{
-			ID:     ids.TaskSampleID(fmt.Sprintf("%s_%d", task.ID, index)),
+			ID:     task.ID.TaskSampleID(index),
 			TaskID: task.ID,
-			Index:  fmt.Sprint(i + 1),
+			Index:  fmt.Sprint(index),
 			Type:   models.TaskSampleTypeSystem,
 			Input:  s.Input,
 			Output: s.Output,

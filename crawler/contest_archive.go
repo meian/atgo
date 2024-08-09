@@ -12,6 +12,7 @@ import (
 	"github.com/meian/atgo/crawler/requests"
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/timezone"
 	"github.com/meian/atgo/url"
 	"github.com/meian/atgo/util"
@@ -171,7 +172,7 @@ func (c *ContestArchive) parseContest(ctx context.Context, tr *goquery.Selection
 	}
 
 	return responses.ContestArchive_Contest{
-		ID:         id,
+		ID:         ids.ContestID(id),
 		Title:      title,
 		StartAt:    startAt,
 		Duration:   duration,

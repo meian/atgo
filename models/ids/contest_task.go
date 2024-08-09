@@ -1,6 +1,8 @@
 package ids
 
-import "regexp"
+import (
+	"regexp"
+)
 
 const contestTaskIDLabel = "contest task ID"
 

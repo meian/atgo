@@ -60,8 +60,8 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contests")
 	}
-	contestm := util.ToMap(contests, func(c models.Contest) string {
-		return string(c.ID)
+	contestm := util.ToMap(contests, func(c models.Contest) ids.ContestID {
+		return c.ID
 	})
 
 	ratedType := param.RatedType.String()

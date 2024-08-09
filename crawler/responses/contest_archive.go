@@ -16,8 +16,8 @@ type ContestArchive struct {
 
 type ContestArchive_ContestList []ContestArchive_Contest
 
-func (c ContestArchive_ContestList) IDs() []string {
-	ids := make([]string, len(c))
+func (c ContestArchive_ContestList) IDs() []ids.ContestID {
+	ids := make([]ids.ContestID, len(c))
 	for i, contest := range c {
 		ids[i] = contest.ID
 	}
@@ -25,7 +25,7 @@ func (c ContestArchive_ContestList) IDs() []string {
 }
 
 type ContestArchive_Contest struct {
-	ID         string
+	ID         ids.ContestID
 	Title      string
 	StartAt    time.Time
 	Duration   time.Duration
