@@ -13,6 +13,7 @@ import (
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/csrf"
 	"github.com/meian/atgo/logs"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/url"
 	"github.com/pkg/errors"
 )
@@ -59,7 +60,7 @@ func (c *Task) Do(ctx context.Context, req requests.Task) (*responses.Task, erro
 	}
 
 	return &responses.Task{
-		ID:        req.TaskID,
+		ID:        ids.TaskID(req.TaskID),
 		Score:     score,
 		Samples:   samples,
 		CSRFToken: csrf.FromDocument(doc),
@@ -136,7 +137,7 @@ func (c *Task) parseSamples(ctx context.Context, doc *goquery.Document) ([]respo
 	return samples, nil
 }
 
-func (c *Task) taskStatement(ctx context.Context, doc *goquery.Document) (*goquery.Selection, error) {
+func (c *Task) taskStatement(_ context.Context, doc *goquery.Document) (*goquery.Selection, error) {
 	// span.stmt がない場合もあるので、その場合は div.task-statement を対象にする
 	stmt := doc.Find("span.lang-ja")
 	if stmt.Length() == 0 {

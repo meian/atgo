@@ -168,7 +168,7 @@ func (u Submit) build(ctx context.Context) error {
 	return nil
 }
 
-func (u Submit) test(ctx context.Context) error {
+func (u Submit) test(context.Context) error {
 	cmd := exec.Command("go", "test")
 	cmd.Dir = workspace.Dir()
 	// テストの構文エラーはstderrで捕捉、テスト自体の失敗はstdoutで捕捉

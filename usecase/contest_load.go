@@ -45,13 +45,9 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 		return nil, errors.New("failed to list contests")
 	}
 
-	contestIDs := res.Contests.IDs()
-	if len(contestIDs) == 0 {
+	cids := res.Contests.IDs()
+	if len(cids) == 0 {
 		return nil, errors.New("no archived contests.")
-	}
-	cids := make([]ids.ContestID, len(contestIDs))
-	for i, id := range contestIDs {
-		cids[i] = ids.ContestID(id)
 	}
 	logger = logger.With("totalPages", res.TotalPages)
 	crepo := repo.NewContest(database.FromContext(ctx))
@@ -60,8 +56,8 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contests")
 	}
-	contestm := util.ToMap(contests, func(c models.Contest) string {
-		return string(c.ID)
+	contestm := util.ToMap(contests, func(c models.Contest) ids.ContestID {
+		return c.ID
 	})
 
 	ratedType := param.RatedType.String()
@@ -73,7 +69,7 @@ func (u ContestLoad) Run(ctx context.Context, param ContestLoadParam) (*ContestL
 		if !ok {
 			logger.Debug("new contest")
 			newContests = append(newContests, models.Contest{
-				ID:         ids.ContestID(contest.ID),
+				ID:         contest.ID,
 				Title:      contest.Title,
 				StartAt:    contest.StartAt,
 				Duration:   contest.Duration,

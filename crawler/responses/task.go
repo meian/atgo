@@ -1,7 +1,9 @@
 package responses
 
+import "github.com/meian/atgo/models/ids"
+
 type Task struct {
-	ID        string
+	ID        ids.TaskID
 	Score     *int
 	Samples   []Task_Sample
 	CSRFToken string

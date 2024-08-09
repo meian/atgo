@@ -1,6 +1,9 @@
 package ids
 
-import "regexp"
+import (
+	"fmt"
+	"regexp"
+)
 
 const taskIDLabel = "task ID"
 
@@ -21,4 +24,8 @@ func (id TaskID) Validate() error {
 		return newErrInvalidFormat(taskIDLabel, id)
 	}
 	return nil
+}
+
+func (id TaskID) TaskSampleID(index int) TaskSampleID {
+	return TaskSampleID(fmt.Sprint(id, "__", index))
 }

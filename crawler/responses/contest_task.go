@@ -1,7 +1,6 @@
 package responses
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/meian/atgo/models"
@@ -9,22 +8,21 @@ import (
 )
 
 type ContestTask struct {
-	ContestID string
+	ContestID ids.ContestID
 	Tasks     []ContestTask_Task
 }
 
 func (ct ContestTask) ToModel() []models.ContestTask {
 	var tasks []models.ContestTask
 	for i, t := range ct.Tasks {
-		id := fmt.Sprintf("%s-%s", ct.ContestID, t.ID)
 		tasks = append(tasks, models.ContestTask{
-			ID:        ids.ContestTaskID(id),
-			ContestID: ids.ContestID(ct.ContestID),
-			TaskID:    ids.TaskID(t.ID),
+			ID:        ct.ContestID.ContestTaskID(t.ID),
+			ContestID: ct.ContestID,
+			TaskID:    t.ID,
 			Order:     i + 1,
 			Index:     t.Index,
 			Task: models.Task{
-				ID:        ids.TaskID(t.ID),
+				ID:        t.ID,
 				Title:     t.Title,
 				TimeLimit: t.TimeLimit,
 				Memory:    t.Memory,
@@ -35,7 +33,7 @@ func (ct ContestTask) ToModel() []models.ContestTask {
 }
 
 type ContestTask_Task struct {
-	ID        string
+	ID        ids.TaskID
 	Title     string
 	Index     string
 	TimeLimit time.Duration
