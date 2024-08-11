@@ -1,12 +1,11 @@
 package requests
 
+import "github.com/meian/atgo/models/ids"
+
 type ContestTask struct {
-	ContestID string
+	ContestID ids.ContestID
 }
 
 func (r ContestTask) Validate() error {
-	if r.ContestID == "" {
-		return ErrReqContestID
-	}
-	return nil
+	return r.ContestID.Validate()
 }

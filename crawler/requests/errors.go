@@ -6,8 +6,6 @@ import (
 )
 
 var (
-	ErrReqContestID  = newRequiredError("Contest ID")
-	ErrReqTaskID     = newRequiredError("Task ID")
 	ErrReqSourceCode = newRequiredError("Source code")
 	ErrReqCSRFToken  = newRequiredError("CSRF token")
 
