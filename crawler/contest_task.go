@@ -35,7 +35,7 @@ func (c *ContestTask) Do(ctx context.Context, req requests.ContestTask) (*respon
 	)
 	ctx = logs.ContextWith(ctx, logger)
 
-	crawler := c.crawler.WithPathParam("contestID", req.ContestID)
+	crawler := c.crawler.WithPathParam("contestID", string(req.ContestID))
 	doc, err := crawler.DocumentGet(ctx, nil)
 	if err != nil {
 		logger.Error(err.Error())

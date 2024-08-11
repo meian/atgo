@@ -9,6 +9,7 @@ import (
 	"github.com/meian/atgo/http"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/repo"
 	"github.com/meian/atgo/usecase/common"
 	"github.com/meian/atgo/workspace"
@@ -84,7 +85,7 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 func (u Contest) createContest(ctx context.Context, contestID string) (*models.Contest, error) {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := requests.Contest{ContestID: contestID}
+	req := requests.Contest{ContestID: ids.ContestID(contestID)}
 	res, err := crawler.NewContest(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())
@@ -101,7 +102,7 @@ func (u Contest) createContest(ctx context.Context, contestID string) (*models.C
 func (u Contest) loadTasks(ctx context.Context, contest *models.Contest) error {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := requests.ContestTask{ContestID: string(contest.ID)}
+	req := requests.ContestTask{ContestID: contest.ID}
 	res, err := crawler.NewContestTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())

@@ -25,7 +25,7 @@ func (c *Submit) Do(ctx context.Context, req requests.Submit) (*responses.Submit
 		return nil, err
 	}
 	logger := logs.FromContext(ctx)
-	crawler := c.crawler.WithPathParam("contestID", req.ContestID)
+	crawler := c.crawler.WithPathParam("contestID", string(req.ContestID))
 	resp, err := crawler.Post(ctx, nil, req)
 	if err != nil {
 		logger.Error(err.Error())

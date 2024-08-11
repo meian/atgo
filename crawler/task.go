@@ -39,8 +39,8 @@ func (c *Task) Do(ctx context.Context, req requests.Task) (*responses.Task, erro
 	ctx = logs.ContextWith(ctx, logger)
 
 	crawler := c.crawler.
-		WithPathParam("contestID", req.ContestID).
-		WithPathParam("id", req.TaskID)
+		WithPathParam("contestID", string(req.ContestID)).
+		WithPathParam("id", string(req.TaskID))
 	doc, err := crawler.DocumentGet(ctx, nil)
 	if err != nil {
 		logger.Error(err.Error())

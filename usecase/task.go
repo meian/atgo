@@ -163,7 +163,7 @@ func (u Task) createTask(ctx context.Context, contestID string, taskID string) (
 func (u Task) loadTaskSamples(ctx context.Context, contestID string, task *models.Task) error {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := requests.Task{TaskID: string(task.ID), ContestID: contestID}
+	req := requests.Task{TaskID: task.ID, ContestID: ids.ContestID(contestID)}
 	res, err := crawler.NewTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())
