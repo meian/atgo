@@ -49,7 +49,7 @@ func (c *ContestTask) Do(ctx context.Context, req requests.ContestTask) (*respon
 	}
 
 	return &responses.ContestTask{
-		ContestID: ids.ContestID(req.ContestID),
+		ContestID: req.ContestID,
 		Tasks:     tasks,
 	}, nil
 }
@@ -95,12 +95,18 @@ func (c *ContestTask) parseTask(ctx context.Context, tr *goquery.Selection) (*re
 		logger.Error("title must not be empty")
 		return nil, errors.New("failed to find title")
 	}
-	paths := strings.Split(tds.Eq(1).Find("a").AttrOr("href", ""), "/")
-	if len(paths) == 0 {
+	path := tds.Eq(1).Find("a").AttrOr("href", "")
+	if len(path) == 0 {
 		logger.Error("href must not be empty")
 		return nil, errors.New("failed to find href")
 	}
-	id := paths[len(paths)-1]
+	paths := strings.Split(path, "/")
+	id := ids.TaskID(paths[len(paths)-1])
+	if err := id.Validate(); err != nil {
+		logger.With("id", id).Error(err.Error())
+		return nil, errors.Wrap(err, "failed to validate task id")
+	}
+
 	sec, err := util.ParseDuration(tds.Eq(2).Text())
 	if err != nil {
 		logger.Error(err.Error())
@@ -112,7 +118,7 @@ func (c *ContestTask) parseTask(ctx context.Context, tr *goquery.Selection) (*re
 		return nil, errors.Wrap(err, "failed to parse memory limit")
 	}
 	return &responses.ContestTask_Task{
-		ID:        ids.TaskID(id),
+		ID:        id,
 		Index:     symbol,
 		Title:     title,
 		TimeLimit: sec,

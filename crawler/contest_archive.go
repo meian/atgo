@@ -119,12 +119,12 @@ func (c *ContestArchive) parseContents(ctx context.Context, doc *goquery.Documen
 			logger.Error(err.Error())
 			return nil, errors.New("failed to parse contest")
 		}
-		contests = append(contests, c)
+		contests = append(contests, *c)
 	}
 	return contests, nil
 }
 
-func (c *ContestArchive) parseContest(ctx context.Context, tr *goquery.Selection) (responses.ContestArchive_Contest, error) {
+func (c *ContestArchive) parseContest(ctx context.Context, tr *goquery.Selection) (*responses.ContestArchive_Contest, error) {
 	logger := logs.FromContext(ctx)
 	tds := tr.Find("td")
 
@@ -132,12 +132,12 @@ func (c *ContestArchive) parseContest(ctx context.Context, tr *goquery.Selection
 	// timeタグの中はgoqueryの解析では年月日時分秒+タイムゾーンの形式になってる?
 	tdTime := tds.Eq(0).FindMatcher(goquery.Single("td a time.fixtime-full"))
 	if tdTime.Length() == 0 {
-		return responses.ContestArchive_Contest{}, errors.New("no time is found")
+		return nil, errors.New("no time is found")
 	}
 	startAt, err := time.ParseInLocation("2006-01-02 15:04:05-0700", tdTime.Text(), timezone.Tokyo)
 	if err != nil {
 		logger.Error(err.Error())
-		return responses.ContestArchive_Contest{}, errors.New("failed to parse start time")
+		return nil, errors.New("failed to parse start time")
 	}
 
 	// <td><span/><span/><a href="/contests/abc342">HUAWEI Programming Contest 2024</a></td>
@@ -151,9 +151,13 @@ func (c *ContestArchive) parseContest(ctx context.Context, tr *goquery.Selection
 	href, ok := td1Anchor.Attr("href")
 	if !ok {
 		logger.With("title", title).Error("no contest url is found")
-		return responses.ContestArchive_Contest{}, errors.New("failed to parse contest url")
+		return nil, errors.New("failed to parse contest url")
 	}
-	id := strings.TrimPrefix(href, "/contests/")
+	id := ids.ContestID(strings.TrimPrefix(href, "/contests/"))
+	if err := id.Validate(); err != nil {
+		logger.With("id", id).Error(err.Error())
+		return nil, errors.New("failed to validate contest id")
+	}
 
 	// <td>01:40</td>
 	// 時間は3桁もありうる
@@ -161,7 +165,7 @@ func (c *ContestArchive) parseContest(ctx context.Context, tr *goquery.Selection
 	duration, err := util.ParseHoursMinutes(td2)
 	if err != nil {
 		logger.Error(err.Error())
-		return responses.ContestArchive_Contest{}, errors.New("failed to parse duration")
+		return nil, errors.New("failed to parse duration")
 	}
 
 	// <td> ~ 1999</td>
@@ -171,8 +175,8 @@ func (c *ContestArchive) parseContest(ctx context.Context, tr *goquery.Selection
 		targetRate = "Unrated"
 	}
 
-	return responses.ContestArchive_Contest{
-		ID:         ids.ContestID(id),
+	return &responses.ContestArchive_Contest{
+		ID:         id,
 		Title:      title,
 		StartAt:    startAt,
 		Duration:   duration,

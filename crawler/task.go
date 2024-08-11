@@ -13,7 +13,6 @@ import (
 	"github.com/meian/atgo/crawler/responses"
 	"github.com/meian/atgo/csrf"
 	"github.com/meian/atgo/logs"
-	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/url"
 	"github.com/pkg/errors"
 )
@@ -60,7 +59,7 @@ func (c *Task) Do(ctx context.Context, req requests.Task) (*responses.Task, erro
 	}
 
 	return &responses.Task{
-		ID:        ids.TaskID(req.TaskID),
+		ID:        req.TaskID,
 		Score:     score,
 		Samples:   samples,
 		CSRFToken: csrf.FromDocument(doc),
