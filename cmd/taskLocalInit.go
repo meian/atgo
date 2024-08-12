@@ -42,8 +42,8 @@ Do not edit task-local.yaml manually as it is used when submitting code with ` +
 		}
 
 		p := usecase.TaskLocalInitParam{
-			ContestID: taskLocalInitFlag.contestID,
-			TaskID:    taskID,
+			ContestID: ids.ContestID(taskLocalInitFlag.contestID),
+			TaskID:    ids.TaskID(taskID),
 		}
 		res, err := usecase.TaskLocalInit{}.Run(cmd.Context(), p)
 		if err != nil {

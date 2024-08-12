@@ -4,6 +4,7 @@ import (
 	"github.com/meian/atgo/io"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/tmpl"
 	"github.com/meian/atgo/usecase"
 	"github.com/pkg/errors"
@@ -28,8 +29,8 @@ var taskCmd = &cobra.Command{
 		}
 
 		p := usecase.TaskParam{
-			TaskID:      taskID,
-			ContestID:   taskFlag.contestID,
+			TaskID:      ids.TaskID(taskID),
+			ContestID:   ids.ContestID(taskFlag.contestID),
 			ShowSamples: taskFlag.showSamples,
 		}
 		res, err := usecase.Task{}.Run(ctx, p)

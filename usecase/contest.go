@@ -19,7 +19,7 @@ import (
 type Contest struct{}
 
 type ContestParam struct {
-	ContestID string
+	ContestID ids.ContestID
 }
 type ContestResult struct {
 	Contest models.Contest
@@ -43,7 +43,7 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 		return nil, errors.New("failed to find contest")
 	}
 	if contest == nil {
-		contest, err = u.createContest(ctx, string(info.ContestID))
+		contest, err = u.createContest(ctx, info.ContestID)
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +61,7 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 		return nil, errors.New("failed to find contest with tasks")
 	}
 
-	if param.ContestID != string(info.ContestID) {
+	if param.ContestID != info.ContestID {
 		taskFile, _ := workspace.TaskInfoFile()
 		if err := info.WriteFile(taskFile); err != nil {
 			logger.Error(err.Error())
@@ -82,7 +82,7 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 	}, nil
 }
 
-func (u Contest) createContest(ctx context.Context, contestID string) (*models.Contest, error) {
+func (u Contest) createContest(ctx context.Context, contestID ids.ContestID) (*models.Contest, error) {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
 	req := requests.Contest{ContestID: ids.ContestID(contestID)}

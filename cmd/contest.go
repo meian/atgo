@@ -28,7 +28,7 @@ var contestCmd = &cobra.Command{
 		ctx = logs.ContextWith(ctx, logger)
 
 		p := usecase.ContestParam{
-			ContestID: contestID,
+			ContestID: ids.ContestID(contestID),
 		}
 		res, err := usecase.Contest{}.Run(ctx, p)
 		if err != nil {
