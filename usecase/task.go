@@ -130,7 +130,7 @@ func (u Task) createTask(ctx context.Context, contestID ids.ContestID, taskID id
 	logger := logs.FromContext(ctx)
 
 	ctx = logs.ContextWith(ctx, logger)
-	contest, err := repo.NewContest(database.FromContext(ctx)).Find(ctx, ids.ContestID(contestID))
+	contest, err := repo.NewContest(database.FromContext(ctx)).Find(ctx, contestID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find contest")
@@ -148,7 +148,7 @@ func (u Task) createTask(ctx context.Context, contestID ids.ContestID, taskID id
 		}
 	}
 
-	task, err := repo.NewTask(database.FromContext(ctx)).Find(ctx, ids.TaskID(taskID))
+	task, err := repo.NewTask(database.FromContext(ctx)).Find(ctx, taskID)
 	if err != nil {
 		logger.Error(err.Error())
 		return nil, errors.New("failed to find task")
@@ -163,7 +163,7 @@ func (u Task) createTask(ctx context.Context, contestID ids.ContestID, taskID id
 func (u Task) loadTaskSamples(ctx context.Context, contestID ids.ContestID, task *models.Task) error {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := requests.Task{TaskID: task.ID, ContestID: ids.ContestID(contestID)}
+	req := requests.Task{TaskID: task.ID, ContestID: contestID}
 	res, err := crawler.NewTask(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())
