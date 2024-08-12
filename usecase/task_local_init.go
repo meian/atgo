@@ -11,6 +11,7 @@ import (
 	"github.com/meian/atgo/io"
 	"github.com/meian/atgo/logs"
 	"github.com/meian/atgo/models"
+	"github.com/meian/atgo/models/ids"
 	"github.com/meian/atgo/tmpl"
 	"github.com/meian/atgo/workspace"
 	"github.com/pkg/errors"
@@ -19,13 +20,13 @@ import (
 type TaskLocalInit struct{}
 
 type TaskLocalInitParam struct {
-	TaskID    string
-	ContestID string
+	TaskID    ids.TaskID
+	ContestID ids.ContestID
 }
 
 type TaskLocalInitResult struct {
-	ContestID string
-	TaskID    string
+	ContestID ids.ContestID
+	TaskID    ids.TaskID
 	New       bool
 }
 
@@ -64,8 +65,8 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 			return nil, errors.New("failed to restore task files")
 		}
 		return &TaskLocalInitResult{
-			ContestID: string(contest.ID),
-			TaskID:    string(task.ID),
+			ContestID: contest.ID,
+			TaskID:    task.ID,
 			New:       false,
 		}, nil
 	}
@@ -137,8 +138,8 @@ func (u TaskLocalInit) Run(ctx context.Context, param TaskLocalInitParam) (*Task
 	}
 
 	return &TaskLocalInitResult{
-		ContestID: string(contest.ID),
-		TaskID:    string(task.ID),
+		ContestID: contest.ID,
+		TaskID:    task.ID,
 		New:       true,
 	}, nil
 }

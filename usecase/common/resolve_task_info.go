@@ -11,7 +11,7 @@ import (
 	"github.com/meian/atgo/workspace"
 )
 
-func ResolveTaskInfo(ctx context.Context, contestID, taskID string) (*models.TaskInfo, bool, error) {
+func ResolveTaskInfo(ctx context.Context, contestID ids.ContestID, taskID ids.TaskID) (*models.TaskInfo, bool, error) {
 	logger := logs.FromContext(ctx)
 	if len(taskID) > 0 {
 		logger = logger.With("taskID", taskID)
@@ -21,11 +21,13 @@ func ResolveTaskInfo(ctx context.Context, contestID, taskID string) (*models.Tas
 				logger.Error(err.Error())
 				return nil, false, errors.New("failed to detect contest ID from task ID")
 			}
-			contestID = string(cID)
+			contestID = cID
 		}
 	}
 
 	mustSave := false
+
+	// TODO: contestIDが渡されない場合のフローを簡略化できそうなので後で確認する
 
 	file, ok := workspace.TaskInfoFile()
 	logger = logger.With("info file", file)
@@ -42,7 +44,7 @@ func ResolveTaskInfo(ctx context.Context, contestID, taskID string) (*models.Tas
 			return nil, false, errors.New("failed to find task info file")
 		}
 		return &models.TaskInfo{
-			ContestID: ids.ContestID(contestID),
+			ContestID: contestID,
 			TaskID:    ids.TaskID(taskID),
 		}, true, nil
 	}
@@ -55,8 +57,8 @@ func ResolveTaskInfo(ctx context.Context, contestID, taskID string) (*models.Tas
 		return nil, false, errors.New("cannot get contest ID from task info file")
 	}
 	if len(contestID) > 0 {
-		if info.ContestID != ids.ContestID(contestID) {
-			info.ContestID = ids.ContestID(contestID)
+		if info.ContestID != contestID {
+			info.ContestID = contestID
 			info.TaskID = ids.TaskID(taskID)
 			mustSave = true
 		}

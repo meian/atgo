@@ -21,8 +21,8 @@ import (
 type Task struct{}
 
 type TaskParam struct {
-	TaskID      string
-	ContestID   string
+	ContestID   ids.ContestID
+	TaskID      ids.TaskID
 	ShowSamples bool
 }
 
@@ -51,14 +51,14 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		return nil, errors.New("failed to find task")
 	}
 	if task == nil {
-		task, err = u.createTask(ctx, string(info.ContestID), string(info.TaskID))
+		task, err = u.createTask(ctx, info.ContestID, info.TaskID)
 		if err != nil {
 			logger.Error(err.Error())
 			return nil, errors.New("failed to create task")
 		}
 	}
 	if !task.Loaded {
-		err := u.loadTaskSamples(ctx, string(info.ContestID), task)
+		err := u.loadTaskSamples(ctx, info.ContestID, task)
 		if err != nil {
 			return nil, err
 		}
@@ -70,7 +70,7 @@ func (u Task) Run(ctx context.Context, param TaskParam) (*TaskResult, error) {
 		return nil, errors.New("failed to find contest")
 	}
 	if contest == nil {
-		contest, err = (&Contest{}).createContest(ctx, string(info.ContestID))
+		contest, err = (&Contest{}).createContest(ctx, info.ContestID)
 		if err != nil {
 			logger.Error(err.Error())
 			return nil, errors.New("failed to create contest")
@@ -126,7 +126,7 @@ func (u Task) resolveTaskInfo(ctx context.Context, param TaskParam) (*models.Tas
 	return info, mustSave, nil
 }
 
-func (u Task) createTask(ctx context.Context, contestID string, taskID string) (*models.Task, error) {
+func (u Task) createTask(ctx context.Context, contestID ids.ContestID, taskID ids.TaskID) (*models.Task, error) {
 	logger := logs.FromContext(ctx)
 
 	ctx = logs.ContextWith(ctx, logger)
@@ -160,7 +160,7 @@ func (u Task) createTask(ctx context.Context, contestID string, taskID string) (
 	return task, nil
 }
 
-func (u Task) loadTaskSamples(ctx context.Context, contestID string, task *models.Task) error {
+func (u Task) loadTaskSamples(ctx context.Context, contestID ids.ContestID, task *models.Task) error {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
 	req := requests.Task{TaskID: task.ID, ContestID: ids.ContestID(contestID)}
