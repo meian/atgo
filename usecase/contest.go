@@ -85,7 +85,7 @@ func (u Contest) Run(ctx context.Context, param ContestParam) (*ContestResult, e
 func (u Contest) createContest(ctx context.Context, contestID ids.ContestID) (*models.Contest, error) {
 	logger := logs.FromContext(ctx)
 	client := http.ClientFromContext(ctx)
-	req := requests.Contest{ContestID: ids.ContestID(contestID)}
+	req := requests.Contest{ContestID: contestID}
 	res, err := crawler.NewContest(client).Do(ctx, req)
 	if err != nil {
 		logger.Error(err.Error())

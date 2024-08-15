@@ -15,7 +15,7 @@ func ResolveTaskInfo(ctx context.Context, contestID ids.ContestID, taskID ids.Ta
 	if len(taskID) > 0 {
 		logger = logger.With("taskID", taskID)
 		if len(contestID) == 0 {
-			cID, err := models.DetectContestID(ids.TaskID(taskID))
+			cID, err := models.DetectContestID(taskID)
 			if err != nil {
 				logger.Error(err.Error())
 				return nil, false, errors.New("failed to detect contest ID from task ID")
@@ -32,7 +32,7 @@ func ResolveTaskInfo(ctx context.Context, contestID ids.ContestID, taskID ids.Ta
 		}
 		return &models.TaskInfo{
 			ContestID: contestID,
-			TaskID:    ids.TaskID(taskID),
+			TaskID:    taskID,
 		}, true, nil
 	}
 	var info models.TaskInfo
@@ -47,13 +47,13 @@ func ResolveTaskInfo(ctx context.Context, contestID ids.ContestID, taskID ids.Ta
 	if len(contestID) > 0 {
 		if info.ContestID != contestID {
 			info.ContestID = contestID
-			info.TaskID = ids.TaskID(taskID)
+			info.TaskID = taskID
 			mustSave = true
 		}
 	}
 	if len(taskID) > 0 {
-		if info.TaskID != ids.TaskID(taskID) {
-			info.TaskID = ids.TaskID(taskID)
+		if info.TaskID != taskID {
+			info.TaskID = taskID
 			mustSave = true
 		}
 	}
