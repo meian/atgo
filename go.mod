@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
-	github.com/fatih/color v1.17.0
+	github.com/fatih/color v1.18.0
 	github.com/glebarez/sqlite v1.11.0
 	github.com/m-mizutani/clog v0.0.7
 	github.com/manifoldco/promptui v0.9.0
@@ -51,7 +51,7 @@ require (
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/net v0.24.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	modernc.org/libc v1.22.5 // indirect
