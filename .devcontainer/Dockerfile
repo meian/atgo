@@ -1,4 +1,15 @@
-FROM mcr.microsoft.com/devcontainers/go:1.22-bookworm
+ARG GO_VERSION=1.24.1
+
+# ビルド変数で指定したバージョンのgolangを取得
+FROM alpine:latest AS latest-go-fetcher
+ARG GO_VERSION
+ENV GO_VERSION=${GO_VERSION}
+
+RUN apk add --no-cache curl=~8.12.1-r1 tar=~1.35-r2
+RUN curl -LO https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz
+RUN tar -C /tmp -xzf go${GO_VERSION}.linux-amd64.tar.gz
+
+FROM mcr.microsoft.com/devcontainers/go:1.23-bookworm
 
 ARG USERNAME
 
@@ -19,6 +30,11 @@ RUN if [ -z "${USERNAME}" ] ; then exit 1 ; fi \
     && useradd -u1000 -g1000 -s/bin/bash -b/home/${USERNAME} ${USERNAME} 2> /dev/null || true
 
 RUN install -d -m 0755 -o ${USERNAME} -g ${USERNAME} /workspace
+
+COPY --from=latest-go-fetcher /tmp/go /tmp/go
+RUN GOPATH=$(dirname $(dirname $(which go))) \
+    && rm ${GOPATH} -rf \
+    && mv /tmp/go ${GOPATH}
 
 USER ${USERNAME}
 
