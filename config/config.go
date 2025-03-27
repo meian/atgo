@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log/slog"
 	"reflect"
 
@@ -20,7 +21,7 @@ func Inititalize() {
 	viper.SetEnvPrefix("ATGO")
 	viper.AutomaticEnv()
 	if err := viper.Unmarshal(&Config); err != nil {
-		slog.Warn("failed to read config from environment: %v", err)
+		slog.Warn(fmt.Sprintf("failed to read config from environment: %v", err))
 		return
 	}
 	_, err := logs.ParseLevel(Config.DefaultLogLevel)
