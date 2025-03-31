@@ -3,7 +3,7 @@ module github.com/meian/atgo
 go 1.23.0
 require (
 	github.com/PuerkitoBio/goquery v1.10.0
-	github.com/fatih/color v1.17.0
+	github.com/fatih/color v1.18.0
 	github.com/glebarez/sqlite v1.11.0
 	github.com/m-mizutani/clog v0.0.7
 	github.com/manifoldco/promptui v0.9.0
