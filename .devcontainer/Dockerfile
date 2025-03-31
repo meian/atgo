@@ -9,7 +9,7 @@ RUN apk add --no-cache curl=~8.12.1-r1 tar=~1.35-r2
 RUN curl -LO https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz
 RUN tar -C /tmp -xzf go${GO_VERSION}.linux-amd64.tar.gz
 
-FROM mcr.microsoft.com/devcontainers/go:1.23-bookworm
+FROM mcr.microsoft.com/devcontainers/go:1.24-bookworm
 
 ARG USERNAME
 
