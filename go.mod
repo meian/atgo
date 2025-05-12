@@ -1,6 +1,7 @@
 module github.com/meian/atgo
 
 go 1.23.0
+
 require (
 	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/fatih/color v1.18.0
@@ -14,7 +15,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	gopkg.in/guregu/null.v3 v3.5.0
 	gopkg.in/yaml.v3 v3.0.1
-	gorm.io/gorm v1.25.12
+	gorm.io/gorm v1.26.1
 )
 
 require (
