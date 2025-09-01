@@ -1,11 +1,12 @@
 module github.com/meian/atgo
 
 go 1.23.0
+
 require (
 	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/fatih/color v1.18.0
 	github.com/glebarez/sqlite v1.11.0
-	github.com/m-mizutani/clog v0.0.7
+	github.com/m-mizutani/clog v0.1.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mattn/go-runewidth v0.0.16
 	github.com/pkg/errors v0.9.1
@@ -30,7 +31,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/k0kubun/pp/v3 v3.2.0 // indirect
-	github.com/m-mizutani/goerr v0.1.11 // indirect
+	github.com/m-mizutani/goerr/v2 v2.0.0-alpha.1.0.20250108231337-0b64a5f93f03 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
