@@ -54,25 +54,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download (linux - amd64)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: artifact_linux_amd64
           path: releases
 
       - name: Download (linux - arm64)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: artifact_linux_arm64
           path: releases
 
       - name: Download (darwin - amd64)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: artifact_darwin_amd64
           path: releases
 
       - name: Download (darwin - arm64)
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: artifact_darwin_arm64
           path: releases
